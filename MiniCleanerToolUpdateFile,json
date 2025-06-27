@@ -1,0 +1,12 @@
+{
+  "version": "0.0.0.0",
+  "releaseNotes": {
+    "IT": [
+      "Rilascio"
+    ],
+    "EN": [
+      "Release"
+    ]
+  },
+  "updateUrl": "test",
+}
