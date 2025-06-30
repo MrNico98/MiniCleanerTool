@@ -30,7 +30,7 @@
 4. Click **"Clean"** to start the cleanup
 
 ### 🖼️ Screenshot
-![MiniCleanerTool Interface](screenshot.png)
+![MiniCleanerTool Interface](Immagini/image.png)
 
 ### ⚠️ Warnings
 - Administrator privileges are required for some functions
@@ -67,7 +67,7 @@ This project is licensed under **MIT** - see the [LICENSE](LICENSE) file for det
 4. Clicca "Clean" per avviare la pulizia
 
 ### 🖼️ Screenshot
-![Interfaccia di MiniCleanerTool](screenshot.png)
+![MiniCleanerTool Interface](Immagini/imageit.png)
 
 ### ⚠️ Avvertenze
 - Il tool richiede privilegi di amministratore per alcune funzioni
