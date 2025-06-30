@@ -1,0 +1,100 @@
+{
+  "Global": {
+    "en": {
+    },
+    "it": {
+    }
+  },
+  "Form1": {
+    "en": {
+      "orario": "time",
+      "buongiorno": "Good morning",
+      "buon_pomeriggio": "Good afternoon",
+      "buonasera": "Good evening",
+      "come_posso_aiutarti": "how can I help you today?",
+      "aggiornamentotrovato": "Update Found",
+      "puliziapc": "Start cleaning your PC?",
+      "noneseguita": "Not performed",
+      "puliziaTitolo": "Clean PC",
+      "rimozioneTemporanei": "Remove temporary files and system cache",
+      "eliminazioneLog": "Delete log files (crash, diagnostics, events)",
+      "puliziaPrefetch": "Clean the Prefetch folder and optimize startup",
+      "rimozioneDefender": "Remove temporary Windows Defender files",
+      "puliziaDirectX": "Clean DirectX Shader cache",
+      "rimozioneCacheIE": "Remove Internet Explorer cache and old apps",
+      "ultimaPulizia": "🕓 Last cleanup performed",
+      "registrohome": "Start cleaning Registry?",
+      "puliziaRegistroTitolo": "Clean Registry",
+      "puliziaDllMancanti": "Clean missing DLLs",
+      "puliziaKeyVuote": "Clean empty Keys",
+      "puliziaAvvioNonValido": "Clean invalid startup entries",
+      "puliziaDisinstallazioniNonValide": "Clean invalid uninstall entries",
+      "puliziaUserAssist": "Clean UserAssist history",
+      "puliziaRecentDocs": "Clean RecentDocs history",
+      "browserhome": "Start cleaning Browser cache?",
+      "puliziaBrowserTitolo": "Clean Browser Cache",
+      "puliziaEdge": "Clean Edge Cache",
+      "puliziaChrome": "Clean Chrome Cache",
+      "puliziaFirefox": "Clean Firefox Cache",
+      "puliziaIE": "Clean IE Cache",
+      "puliziaOpera": "Clean Opera Cache",
+      "puliziaBrave": "Clean Brave Cache",
+      "puliziaVivaldi": "Clean Vivaldi Cache",
+      "puliziaSafari": "Clean Safari Cache",
+      "infoApplicazioneTitolo": "Application Info",
+      "infoApplicazioneDescrizione": "Open application settings",
+      "homeTitolo": "Home",
+      "homeDescrizione": "Back to Home"
+    },
+    "it": {
+      "orario": "orario",
+      "buongiorno": "Buongiorno",
+      "buon_pomeriggio": "Buon pomeriggio",
+      "buonasera": "Buonasera",
+      "come_posso_aiutarti": "come posso aiutarti oggi?",
+      "aggiornamentotrovato": "Aggiornamento Trovato",
+      "puliziapc": "Vuoi iniziare la puliza del PC?",
+      "noneseguita": "Non eseguita",
+      "puliziaTitolo": "Pulizia PC",
+      "rimozioneTemporanei": "Rimozione di file temporanei e cache di sistema",
+      "eliminazioneLog": "Eliminazione dei file di log (crash, diagnostica, eventi)",
+      "puliziaPrefetch": "Pulizia della cartella Prefetch e ottimizzazione dell’avvio",
+      "rimozioneDefender": "Rimozione dei file temporanei di Windows Defender",
+      "puliziaDirectX": "Pulizia della cache DirectX Shader",
+      "rimozioneCacheIE": "Rimozione della cache Internet Explorer e vecchie app",
+      "ultimaPulizia": "🕓 Ultima pulizia effettuata",
+      "registrohome": "Pulizia Registro",
+      "puliziaRegistroTitolo": "Pulizia Registro",
+      "puliziaDllMancanti": "Pulizia di DLL mancanti",
+      "puliziaKeyVuote": "Pulizia di Key vuote",
+      "puliziaAvvioNonValido": "Pulizia delle voci di avvio non valide",
+      "puliziaDisinstallazioniNonValide": "Pulizia delle voci di disinstallazione non valide",
+      "puliziaUserAssist": "Pulizia della cronologia UserAssist",
+      "puliziaRecentDocs": "Pulizia della cronologia RecentDocs",
+      "browserhome": "Pulizia cache Browser",
+      "puliziaBrowserTitolo": "Pulizia cache Browser",
+      "puliziaEdge": "Pulizia cache di Edge",
+      "puliziaChrome": "Pulizia cache di Chrome",
+      "puliziaFirefox": "Pulizia cache di Firefox",
+      "puliziaIE": "Pulizia cache di IE",
+      "puliziaOpera": "Pulizia cache di Opera",
+      "puliziaBrave": "Pulizia cache di Brave",
+      "puliziaVivaldi": "Pulizia cache di Vivaldi",
+      "puliziaSafari": "Pulizia cache di Safari",
+      "infoApplicazioneTitolo": "Info Applicazione",
+      "infoApplicazioneDescrizione": "Apri i settaggi dell'applicazione",
+      "homeTitolo": "Home",
+      "homeDescrizione": "Torna alla Home"
+    }
+  },
+  "ControlInfo": {
+    "en": {
+      "restart_required_message": "The language will be applied after restarting the app. Restart now?",
+      "restart_required_title": "Restart Required"
+    },
+    "it": {
+      "restart_required_message": "La lingua sarà applicata dopo il riavvio dell'app. Riavviare ora?",
+      "restart_required_title": "Riavvio necessario"
+    }
+  }
+}

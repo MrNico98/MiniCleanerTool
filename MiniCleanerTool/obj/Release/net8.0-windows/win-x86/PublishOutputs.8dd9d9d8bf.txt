@@ -1,0 +1,4 @@
+C:\Users\utente\Desktop\MiniCleanerTool\MiniCleanerTool.pdb
+C:\Users\utente\Desktop\MiniCleanerTool\Resources\FileTraduttore.json
+C:\Users\utente\Desktop\MiniCleanerTool\MiniCleanerTool.dll.config
+C:\Users\utente\Desktop\MiniCleanerTool\MiniCleanerTool.exe

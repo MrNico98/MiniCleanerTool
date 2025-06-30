@@ -1,0 +1,294 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\progressform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:progressform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\thememanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:thememanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\languagemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:languagemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\registro\\registrycleaner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:registro\\registrycleaner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\cleaner\\cleaner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:cleaner\\cleaner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\browser\\browsercleaner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:browser\\browsercleaner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\browser\\controlbrowser.resx||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:browser\\controlbrowser.resx||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\controlinfo.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:controlinfo.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\browser\\controlbrowser.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:browser\\controlbrowser.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\app.manifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:app.manifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\controlinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:controlinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\controlinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:controlinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|c:\\users\\utente\\source\\repos\\miniccleaner\\minicleanertool\\resources\\filetraduttore.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9913E10B-5BF0-DC8B-0537-1B092B853BC4}|MiniCleanerTool.csproj|solutionrelative:resources\\filetraduttore.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProgressForm.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ProgressForm.cs",
+              "RelativeDocumentMoniker": "ProgressForm.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ProgressForm.cs",
+              "RelativeToolTip": "ProgressForm.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T07:29:46.505Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ThemeManager.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ThemeManager.cs",
+              "RelativeDocumentMoniker": "ThemeManager.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ThemeManager.cs",
+              "RelativeToolTip": "ThemeManager.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA1wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T07:29:36.772Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LanguageManager.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\LanguageManager.cs",
+              "RelativeDocumentMoniker": "LanguageManager.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\LanguageManager.cs",
+              "RelativeToolTip": "LanguageManager.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T07:29:32.434Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RegistryCleaner.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Registro\\RegistryCleaner.cs",
+              "RelativeDocumentMoniker": "Registro\\RegistryCleaner.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Registro\\RegistryCleaner.cs",
+              "RelativeToolTip": "Registro\\RegistryCleaner.cs",
+              "ViewState": "AgIAAKUBAAAAAAAAAAAqwOUBAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T07:29:16.625Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ControlInfo.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ControlInfo.Designer.cs",
+              "RelativeDocumentMoniker": "ControlInfo.Designer.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ControlInfo.Designer.cs",
+              "RelativeToolTip": "ControlInfo.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T07:28:59.074Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ControlBrowser.resx",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Browser\\ControlBrowser.resx",
+              "RelativeDocumentMoniker": "Browser\\ControlBrowser.resx",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Browser\\ControlBrowser.resx",
+              "RelativeToolTip": "Browser\\ControlBrowser.resx",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAAAD0AAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-06-30T07:28:58.408Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-27T16:35:10.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BrowserCleaner.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Browser\\BrowserCleaner.cs",
+              "RelativeDocumentMoniker": "Browser\\BrowserCleaner.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Browser\\BrowserCleaner.cs",
+              "RelativeToolTip": "Browser\\BrowserCleaner.cs",
+              "ViewState": "AgIAAKYAAAAAAAAAAAAhwLUAAABtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T07:28:07.46Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Cleaner.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Cleaner\\Cleaner.cs",
+              "RelativeDocumentMoniker": "Cleaner\\Cleaner.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Cleaner\\Cleaner.cs",
+              "RelativeToolTip": "Cleaner\\Cleaner.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAQwDgAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T07:15:56.351Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ControlBrowser.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Browser\\ControlBrowser.Designer.cs",
+              "RelativeDocumentMoniker": "Browser\\ControlBrowser.Designer.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Browser\\ControlBrowser.Designer.cs",
+              "RelativeToolTip": "Browser\\ControlBrowser.Designer.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAlwEQAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T07:28:45.39Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "app.manifest",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\app.manifest",
+              "RelativeDocumentMoniker": "app.manifest",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\app.manifest",
+              "RelativeToolTip": "app.manifest",
+              "ViewState": "AgIAADQAAAAAAAAAAAAAADkAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001203|",
+              "WhenOpened": "2025-06-30T07:28:05.55Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Form1.cs [Progettazione]",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Form1.cs",
+              "RelativeDocumentMoniker": "Form1.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Form1.cs [Progettazione]",
+              "RelativeToolTip": "Form1.cs [Progettazione]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-27T16:37:19.42Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ControlInfo.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ControlInfo.cs",
+              "RelativeDocumentMoniker": "ControlInfo.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ControlInfo.cs",
+              "RelativeToolTip": "ControlInfo.cs",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAhwKoAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-27T16:29:28.848Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Form1.cs",
+              "RelativeDocumentMoniker": "Form1.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Form1.cs",
+              "RelativeToolTip": "Form1.cs",
+              "ViewState": "AgIAAGMCAAAAAAAAAAAawHcCAAByAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-27T13:08:28.716Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ControlInfo.cs [Progettazione]",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ControlInfo.cs",
+              "RelativeDocumentMoniker": "ControlInfo.cs",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\ControlInfo.cs [Progettazione]",
+              "RelativeToolTip": "ControlInfo.cs [Progettazione]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-27T16:28:55.018Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "FileTraduttore.json",
+              "DocumentMoniker": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Resources\\FileTraduttore.json",
+              "RelativeDocumentMoniker": "Resources\\FileTraduttore.json",
+              "ToolTip": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\Resources\\FileTraduttore.json",
+              "RelativeToolTip": "Resources\\FileTraduttore.json",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAwCEAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-27T15:15:56.407Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
