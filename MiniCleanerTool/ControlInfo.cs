@@ -23,7 +23,7 @@ namespace MiniCleanerTool
             ThemeManager.ApplyThemeToControl(this, ThemeManager.IsDarkTheme);
             metroSwitch1.Switched = dark;
             dungeonLabel4.Text = dark ? "Tema scuro" : "Tema chiaro";
-            lblClient.Text = $"Versione Client: {currentVersion}";
+            lblClient.Text = $"{LanguageManager.GetTranslation("Info", "versioneclient")} {currentVersion}";
             CheckForUpdatesOnStartup();
             string languageCode = Properties.Settings.Default.Language ?? "en";
             if (isloading == true)
@@ -66,7 +66,7 @@ namespace MiniCleanerTool
                 {
                     string json = await client.GetStringAsync(configUrl);
                     _updateInfo = JsonSerializer.Deserialize<UpdateInfo>(json);
-                    lblServer.Text = $"Versione Server: {_updateInfo.version}";
+                    lblServer.Text = $"{LanguageManager.GetTranslation("Info", "versioneserver")} {_updateInfo.version}";
                     if (_updateInfo.version != currentVersion)
                     {
                         btnAggiorna.Visible = true;
@@ -80,7 +80,7 @@ namespace MiniCleanerTool
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "MiniCleanerTool");
+                MessageBox.Show($"{LanguageManager.GetTranslation("Global", "errore")} {ex.Message}", "MiniCleanerTool");
             }
         }
 
@@ -94,6 +94,17 @@ namespace MiniCleanerTool
                 try
                 {
                     await DownloadFileWithProgress(updateUrl, updateFilePath, progressForm);
+                    string localAppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MiniCleanerTool");
+                    try
+                    {
+                        if (Directory.Exists(localAppDataPath))
+                            Directory.Delete(localAppDataPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"{LanguageManager.GetTranslation("Global", "errore")} {ex.Message}", "MiniCleanerTool");
+                    }
+
                     string currentExecutablePath = Application.ExecutablePath;
                     File.Move(currentExecutablePath, Path.ChangeExtension(currentExecutablePath, ".old"), true);
                     File.Move(updateFilePath, currentExecutablePath);
@@ -102,7 +113,7 @@ namespace MiniCleanerTool
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Errore durante l'aggiornamento: {ex.Message}", "Errore");
+                    MessageBox.Show($"{LanguageManager.GetTranslation("Global", "errore")} {ex.Message}", "MiniCleanerTool");
                 }
                 finally
                 {
@@ -110,6 +121,7 @@ namespace MiniCleanerTool
                 }
             }
         }
+
 
         private async Task DownloadFileWithProgress(string url, string filePath, ProgressForm progressForm)
         {
@@ -125,16 +137,22 @@ namespace MiniCleanerTool
             {
                 await fileStream.WriteAsync(buffer, 0, read);
                 bytesRead += read;
-                progressForm.Invoke(new Action(() => progressForm.SetStatus("Download in corso...", (int)((bytesRead * 100) / totalBytes))));
+                progressForm.Invoke(new Action(() => progressForm.SetStatus("Download...", (int)((bytesRead * 100) / totalBytes))));
             }
         }
 
         private async void btnAggiorna_Click(object sender, EventArgs e)
         {
-            string releaseNotes = string.Join("\n", _updateInfo.releaseNotes["IT"]);
+            string culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper();
+            string releaseNotes = _updateInfo.releaseNotes.ContainsKey(culture)
+                ? string.Join("\n", _updateInfo.releaseNotes[culture])
+                : string.Join("\n", _updateInfo.releaseNotes["EN"]);
+
             var dialogResult = MessageBox.Show(
-                $"Nuova versione disponibile: {_updateInfo.version}\n\nNote di rilascio:\n{releaseNotes}\n\nVuoi aggiornare ora?",
-                "Aggiornamento Disponibile",
+                $"{LanguageManager.GetTranslation("Info", "versioneserverup")}: {_updateInfo.version}\n\n" +
+                $"{LanguageManager.GetTranslation("Info", "releasednotes")}\n{releaseNotes}\n\n" +
+                $"{LanguageManager.GetTranslation("Info", "updatequestion")}",
+                LanguageManager.GetTranslation("Info", "updateavailable"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
             );

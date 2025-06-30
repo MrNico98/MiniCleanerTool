@@ -10,6 +10,7 @@ namespace MiniCleanerTool.Cleaner
         public static async Task CleanSystem(Action<int, string> updateProgress)
         {
             await Task.Delay(3000);
+
             List<string> directoriesToClean = new List<string>
         {
             Path.GetTempPath(),
@@ -31,9 +32,10 @@ namespace MiniCleanerTool.Cleaner
                 .Where(Directory.Exists)
                 .Select(dir => Task.Run(() => CleanDirectory(dir, updateProgress)))
                 .ToArray();
+
             await Task.WhenAll(fileTasks);
 
-            updateProgress(100, "✔️ Pulizia completa di file temporanei, cache e residui di sistema.\n");
+            updateProgress(100, $"✔️ {LanguageManager.GetTranslation("Cleaner", "cleaning_complete_all")}\n");
         }
 
         private static void CleanDirectory(string dir, Action<int, string> updateProgress)
@@ -48,6 +50,7 @@ namespace MiniCleanerTool.Cleaner
 
                 int totalItems = filesToDelete.Count + dirsToDelete.Count;
                 int processedItems = 0;
+
                 Parallel.ForEach(filesToDelete, (file) =>
                 {
                     try
@@ -55,9 +58,9 @@ namespace MiniCleanerTool.Cleaner
                         File.Delete(file);
                         Interlocked.Increment(ref processedItems);
                         int progress = (int)((double)processedItems / totalItems * 100);
-                        updateProgress(progress, $"{DateTime.Now:dd/MM/yyyy - HH.mm} 🗑️ File eliminato: {file}\n");
+                        updateProgress(progress, $"{DateTime.Now:dd/MM/yyyy - HH.mm} 🗑️ {LanguageManager.GetTranslation("Cleaner", "file_deleted")}: {file}\n");
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         Interlocked.Increment(ref processedItems);
                     }
@@ -70,19 +73,18 @@ namespace MiniCleanerTool.Cleaner
                         Directory.Delete(dirToDelete, true);
                         Interlocked.Increment(ref processedItems);
                         int progress = (int)((double)processedItems / totalItems * 100);
-                        updateProgress(progress, $"{DateTime.Now:dd/MM/yyyy - HH.mm} 🗑️ Cartella eliminata: {dirToDelete}\n");
+                        updateProgress(progress, $"{DateTime.Now:dd/MM/yyyy - HH.mm} 🗑️ {LanguageManager.GetTranslation("Cleaner", "folder_deleted")}: {dirToDelete}\n");
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         Interlocked.Increment(ref processedItems);
                     }
                 });
             }
-            catch (Exception ex)
+            catch
             {
 
             }
         }
     }
-
 }

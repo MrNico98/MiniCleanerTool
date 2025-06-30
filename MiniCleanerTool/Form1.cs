@@ -5,10 +5,10 @@ namespace MiniCleanerTool
 {
     public partial class Form1 : Form
     {
-        private enum AzioneConferma { Nessuna, Pulizia, Registro, Browser }
-        private AzioneConferma azioneCorrente = AzioneConferma.Nessuna;
+        private enum AzioneConferma { Nessuna, Pulizia, Registro, Browser, Rete }
         private bool pulisciconfermato = false;
         private bool registroconfermato = false;
+        private AzioneConferma azioneCorrente = AzioneConferma.Nessuna;
         private readonly Dictionary<Control, bool> _isAnimating = new Dictionary<Control, bool>();
         private bool aggiornamento = false;
         public Form1()
@@ -654,6 +654,7 @@ namespace MiniCleanerTool
         private void btnHome_Click(object sender, EventArgs e)
         {
             AttivaBottone(btnInfo);
+            panel3.Visible = false;
             panel2.Controls.Clear();
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(rtbDescription);

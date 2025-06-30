@@ -166,7 +166,7 @@
     <value>MiddleRight</value>
   </data>
   <data name="btnInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 304</value>
+    <value>3, 292</value>
   </data>
   <data name="btnInfo.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 43</value>
@@ -202,7 +202,7 @@
     <value>MiddleRight</value>
   </data>
   <data name="btnHome.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 108</value>
+    <value>3, 96</value>
   </data>
   <data name="btnHome.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 43</value>
@@ -238,7 +238,7 @@
     <value>MiddleRight</value>
   </data>
   <data name="btnBrowser.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 255</value>
+    <value>3, 243</value>
   </data>
   <data name="btnBrowser.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 43</value>
@@ -301,7 +301,7 @@
     <value>MiddleRight</value>
   </data>
   <data name="btnRegistro.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 206</value>
+    <value>3, 194</value>
   </data>
   <data name="btnRegistro.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 43</value>
@@ -337,7 +337,7 @@
     <value>MiddleRight</value>
   </data>
   <data name="btnPulisci.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 157</value>
+    <value>0, 145</value>
   </data>
   <data name="btnPulisci.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 43</value>

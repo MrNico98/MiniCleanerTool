@@ -28,7 +28,7 @@ namespace MiniCleanerTool.Registro
             try
             {
                 await Task.Delay(3000);
-                callback(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Inizio pulizia del registro...\n");
+                callback(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "start_cleaning_registry")}\n");
                 await Task.Delay(3000);
                 CheckMissingDlls(callback);
                 await Task.Delay(5000);
@@ -42,18 +42,20 @@ namespace MiniCleanerTool.Registro
                 await Task.Delay(5000);
                 CleanRegistry(callback);
                 await Task.Delay(2000);
-                callback(100, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Pulizia del registro completata con successo!\n");
+                callback(100, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "cleaning_completed_successfully")}\n");
             }
             catch (Exception ex)
             {
-                callback(-1, $"{DateTime.Now:dd/MM/yyyy - HH.mm} ERRORE durante la pulizia: {ex.Message}\n");
+                callback(-1, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "error_during_cleaning")}: {ex.Message}\n");
             }
         }
+
         private static void CleanRegistry(ProgressLogCallback callback)
         {
             try
             {
-                callback(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Inizio pulizia delle chiavi di registro vuote...\n");
+                callback(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "start_cleaning_empty_keys")}\n");
+
                 string[] registryPathsToClean = {
             @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
             @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\RunMRU",
@@ -67,13 +69,14 @@ namespace MiniCleanerTool.Registro
                 CleanEmptyKeysInHive(Registry.LocalMachine, registryPathsToClean, callback);
                 CleanEmptyKeysInHive(Registry.CurrentUser, registryPathsToClean, callback);
 
-                callback(100, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Pulizia delle chiavi vuote completata con successo!\n");
+                callback(100, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "empty_keys_cleaning_completed")}\n");
             }
             catch (Exception ex)
             {
-                callback(-1, $"{DateTime.Now:dd/MM/yyyy - HH.mm} ERRORE durante la pulizia delle chiavi vuote: {ex.Message}\n");
+                callback(-1, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "error_cleaning_empty_keys")}: {ex.Message}\n");
             }
         }
+
 
         private static void CleanEmptyKeysInHive(RegistryKey hiveRoot, string[] pathsToClean, ProgressLogCallback callback)
         {
@@ -100,7 +103,7 @@ namespace MiniCleanerTool.Registro
                                         try
                                         {
                                             key.DeleteSubKey(subKeyName, false);
-                                            callback(15, $"Rimossa chiave vuota: {hiveRoot.Name}\\{registryPath}\\{subKeyName}\n");
+                                            callback(15, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "removed_empty_key")}: {hiveRoot.Name}\\{registryPath}\\{subKeyName}\n");
                                         }
                                         catch (Exception ex)
                                         {
@@ -120,7 +123,7 @@ namespace MiniCleanerTool.Registro
                             try
                             {
                                 hiveRoot.DeleteSubKeyTree(registryPath);
-                                callback(20, $"Rimossa chiave principale vuota: {hiveRoot.Name}\\{registryPath}\n");
+                                callback(20, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "removed_empty_main_key")}: {hiveRoot.Name}\\{registryPath}\n");
                             }
                             catch (Exception ex)
                             {
@@ -157,7 +160,7 @@ namespace MiniCleanerTool.Registro
 
         private static void CheckMissingDlls(ProgressLogCallback callback)
         {
-            callback(10, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Verifica delle DLL mancanti nelle voci di registro...\n");
+            callback(10, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "verificadllmancanti")}\n");
             CheckMissingDllsInKey(Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\SharedDLLs", callback);
             CheckMissingDllsInKey(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\SharedDLLs", callback);
             CheckMissingDllsInRunEntries(callback);
@@ -179,9 +182,8 @@ namespace MiniCleanerTool.Registro
                             var dllPath = valueName;
                             if (!File.Exists(dllPath))
                             {
-                                callback(15, $"Trovata DLL mancante: {dllPath}\n");
                                 key.DeleteValue(valueName);
-                                callback(15, $"Rimossa voce per DLL mancante: {dllPath}\n");
+                                callback(15, $"{LanguageManager.GetTranslation("Regedit", "rimossavoceperdll")}: {dllPath}\n");
                             }
                         }
                         catch (Exception ex)
@@ -225,9 +227,9 @@ namespace MiniCleanerTool.Registro
                                 var filePath = value.Split(' ')[0].Trim('"');
                                 if (!File.Exists(filePath))
                                 {
-                                    callback(20, $"Trovata voce di esecuzione con file mancante: {filePath}\n");
+                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "trovatoesecuzionemancante")}: {filePath}\n");
                                     key.DeleteValue(valueName);
-                                    callback(20, $"Rimossa voce di esecuzione per file mancante: {filePath}\n");
+                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "rimossavocesecuzionemancante")}: {filePath}\n");
                                 }
                             }
                             catch (Exception ex)
@@ -251,9 +253,9 @@ namespace MiniCleanerTool.Registro
                                 var filePath = value.Split(' ')[0].Trim('"');
                                 if (!File.Exists(filePath))
                                 {
-                                    callback(20, $"Trovata voce di esecuzione con file mancante (HKLM): {filePath}\n");
+                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "trovatoesecuzionemancantehkml")}: {filePath}\n");
                                     key.DeleteValue(valueName);
-                                    callback(20, $"Rimossa voce di esecuzione per file mancante (HKLM): {filePath}\n");
+                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "rimossavocesecuzionemancantehkml")}: {filePath}\n");
                                 }
                             }
                             catch (Exception ex)
@@ -265,14 +267,14 @@ namespace MiniCleanerTool.Registro
                 }
                 catch (Exception ex)
                 {
-                    callback(20, $"Errore durante l'accesso a {runKey}: {ex.Message}\n");
+
                 }
             }
         }
 
         private static void CleanInvalidUninstallEntries(ProgressLogCallback callback)
         {
-            callback(30, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Pulizia delle voci di disinstallazione non valide\n");
+            callback(30, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "puliziavocididisinstallazione")}\n");
 
             try
             {
@@ -298,7 +300,7 @@ namespace MiniCleanerTool.Registro
                                 if (!string.IsNullOrEmpty(installLocation) && !Directory.Exists(installLocation))
                                 {
                                     isValid = false;
-                                    callback(35, $"Trovata voce di disinstallazione con percorso non valido: {displayName}\n");
+                                    callback(35, $"{LanguageManager.GetTranslation("Regedit", "trovatoesodisinstallazionepercorsononvalido")}: {displayName}\n");
                                 }
 
                                 if (!string.IsNullOrEmpty(uninstallString))
@@ -307,7 +309,7 @@ namespace MiniCleanerTool.Registro
                                     if (!File.Exists(uninstallExe))
                                     {
                                         isValid = false;
-                                        callback(35, $"Trovata voce di disinstallazione con comando non valido: {displayName}\n");
+                                        callback(35, $"{LanguageManager.GetTranslation("Regedit", "trovatoesodisinstallazionenonvalida")}: {displayName}\n");
                                     }
                                 }
 
@@ -316,7 +318,7 @@ namespace MiniCleanerTool.Registro
                                     try
                                     {
                                         Registry.LocalMachine.DeleteSubKeyTree($@"Software\Microsoft\Windows\CurrentVersion\Uninstall\{subKeyName}");
-                                        callback(35, $"Rimossa voce di disinstallazione non valida: {displayName}\n");
+                                        callback(35, $"{LanguageManager.GetTranslation("Regedit", "rimossavocididisinstallazionenonvalida")}: {displayName}\n");
                                     }
                                     catch (Exception ex)
                                     {
@@ -338,17 +340,18 @@ namespace MiniCleanerTool.Registro
             }
         }
 
+
         private static void CleanInvalidStartupEntries(ProgressLogCallback callback)
         {
-            callback(40, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Pulizia delle voci di avvio non valide\n");
+            callback(40, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "puliziavocidiavviononvalide")}\n");
 
             var startupKeys = new[]
             {
-                @"Software\Microsoft\Windows\CurrentVersion\Run",
-                @"Software\Microsoft\Windows\CurrentVersion\RunOnce",
-                @"Software\Microsoft\Windows\CurrentVersion\RunServices",
-                @"Software\Microsoft\Windows\CurrentVersion\RunServicesOnce"
-            };
+        @"Software\Microsoft\Windows\CurrentVersion\Run",
+        @"Software\Microsoft\Windows\CurrentVersion\RunOnce",
+        @"Software\Microsoft\Windows\CurrentVersion\RunServices",
+        @"Software\Microsoft\Windows\CurrentVersion\RunServicesOnce"
+    };
 
             foreach (var startupKey in startupKeys)
             {
@@ -369,9 +372,9 @@ namespace MiniCleanerTool.Registro
                                 var filePath = value.Split(' ')[0].Trim('"');
                                 if (!File.Exists(filePath))
                                 {
-                                    callback(45, $"Trovata voce di avvio con file mancante: {valueName}\n");
+                                    callback(45, $"{LanguageManager.GetTranslation("Regedit", "trovatoesecuzionemancante")}: {valueName}\n");
                                     key.DeleteValue(valueName);
-                                    callback(45, $"Rimossa voce di avvio non valida: {valueName}\n");
+                                    callback(45, $"{LanguageManager.GetTranslation("Regedit", "rimossavocesecuzionemancante")}: {valueName}\n");
                                 }
                             }
                             catch (Exception ex)
@@ -395,9 +398,9 @@ namespace MiniCleanerTool.Registro
                                 var filePath = value.Split(' ')[0].Trim('"');
                                 if (!File.Exists(filePath))
                                 {
-                                    callback(45, $"Trovata voce di avvio con file mancante (HKLM): {valueName}\n");
+                                    callback(45, $"{LanguageManager.GetTranslation("Regedit", "trovavocidiavviomancantehkml")}: {valueName}\n");
                                     key.DeleteValue(valueName);
-                                    callback(45, $"Rimossa voce di avvio non valida (HKLM): {valueName}\n");
+                                    callback(45, $"{LanguageManager.GetTranslation("Regedit", "rimossavocesecuzionemancantehkml")}: {valueName}\n");
                                 }
                             }
                             catch (Exception ex)
@@ -416,7 +419,7 @@ namespace MiniCleanerTool.Registro
 
         private static void CleanUserAssistHistory(ProgressLogCallback callback)
         {
-            callback(50, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Pulizia della cronologia UserAssist\n");
+            callback(50, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "puliziacronologiauserassist")}\n");
 
             try
             {
@@ -443,28 +446,29 @@ namespace MiniCleanerTool.Registro
                                     }
                                     catch (Exception ex)
                                     {
-
+                                        callback(55, $"{LanguageManager.GetTranslation("Regedit", "errorerimozionevalore")} '{valueName}' ({subKeyName}): {ex.Message}\n");
                                     }
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-
+                            callback(55, $"{LanguageManager.GetTranslation("Regedit", "erroreaccessosottochiave")} {subKeyName}: {ex.Message}\n");
                         }
                     }
                 }
-                callback(55, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Cronologia UserAssist pulita.\n");
+
+                callback(55, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "cronologiauserassistpulita")}\n");
             }
             catch (Exception ex)
             {
-                callback(55, $"Errore durante la pulizia della cronologia UserAssist: {ex.Message}\n");
+                callback(55, $"{LanguageManager.GetTranslation("Regedit", "errorepuliziacronologiauserassist")}: {ex.Message}\n");
             }
         }
 
         private static void CleanRecentDocsHistory(ProgressLogCallback callback)
         {
-            callback(60, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Pulizia della cronologia RecentDocs\n");
+            callback(60, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "puliziacronologiarecentdocs")}\n");
 
             try
             {
@@ -472,6 +476,7 @@ namespace MiniCleanerTool.Registro
                 using (var recentDocsKey = Registry.CurrentUser.OpenSubKey(recentDocsKeyPath, true))
                 {
                     if (recentDocsKey == null) return;
+
                     var valueNames = recentDocsKey.GetValueNames();
                     foreach (var valueName in valueNames)
                     {
@@ -481,9 +486,10 @@ namespace MiniCleanerTool.Registro
                         }
                         catch (Exception ex)
                         {
-
+                            callback(65, $"{LanguageManager.GetTranslation("Regedit", "errorerimozionevalore")} '{valueName}': {ex.Message}\n");
                         }
                     }
+
                     var subKeyNames = recentDocsKey.GetSubKeyNames();
                     foreach (var subKeyName in subKeyNames)
                     {
@@ -493,15 +499,16 @@ namespace MiniCleanerTool.Registro
                         }
                         catch (Exception ex)
                         {
- 
+                            callback(65, $"{LanguageManager.GetTranslation("Regedit", "erroreaccessosottochiave")} {subKeyName}: {ex.Message}\n");
                         }
                     }
                 }
-                callback(65, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Cronologia RecentDocs pulita.\n");
+
+                callback(65, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "cronologiarecentdocspulita")}\n");
             }
             catch (Exception ex)
             {
-
+                callback(65, $"{LanguageManager.GetTranslation("Regedit", "errorepuliziacronologiarecentdocs")}: {ex.Message}\n");
             }
         }
     }

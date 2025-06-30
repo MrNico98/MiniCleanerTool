@@ -16,41 +16,42 @@ namespace MiniCleanerTool.Browser
             int totalBrowsers = 8;
             int currentProgress = 0;
 
-            reportProgress?.Invoke(currentProgress, "Starting browser cache cleaning...\r\n");
+            reportProgress?.Invoke(currentProgress, $"{LanguageManager.GetTranslation("Browser", "startingclean")}\r\n");
 
             try
             {
-                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, "Cleaning Chrome cache...\r\n");
+                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, $"{LanguageManager.GetTranslation("Browser", "chrome")}\r\n");
                 CleanChromeCache(reportProgress, ref currentProgress, totalBrowsers);
 
-                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, "Cleaning Edge cache...\r\n");
+                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, $"{LanguageManager.GetTranslation("Browser", "edge")}\r\n");
                 CleanEdgeCache(reportProgress, ref currentProgress, totalBrowsers);
 
-                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, "Cleaning Firefox cache...\r\n");
+                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, $"{LanguageManager.GetTranslation("Browser", "firefox")}\r\n");
                 CleanFirefoxCache(reportProgress, ref currentProgress, totalBrowsers);
 
-                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, "Cleaning Opera cache...\r\n");
+                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, $"{LanguageManager.GetTranslation("Browser", "opera")}\r\n");
                 CleanOperaCache(reportProgress, ref currentProgress, totalBrowsers);
 
-                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, "Cleaning Brave cache...\r\n");
+                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, $"{LanguageManager.GetTranslation("Browser", "brave")}\r\n");
                 CleanBraveCache(reportProgress, ref currentProgress, totalBrowsers);
 
-                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, "Cleaning Vivaldi cache...\r\n");
+                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, $"{LanguageManager.GetTranslation("Browser", "vivaldi")}\r\n");
                 CleanVivaldiCache(reportProgress, ref currentProgress, totalBrowsers);
 
-                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, "Cleaning Safari cache...\r\n");
+                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, $"{LanguageManager.GetTranslation("Browser", "safari")}\r\n");
                 CleanSafariCache(reportProgress, ref currentProgress, totalBrowsers);
 
-                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, "Cleaning IE cache...\r\n");
+                reportProgress?.Invoke(++currentProgress * 100 / totalBrowsers, $"{LanguageManager.GetTranslation("Browser", "ie")}\r\n");
                 CleanIECache(reportProgress, ref currentProgress, totalBrowsers);
 
-                reportProgress?.Invoke(100, "Browser cache cleaning completed successfully!\r\n");
+                reportProgress?.Invoke(100, $"{LanguageManager.GetTranslation("Browser", "completed")}\r\n");
             }
             catch (Exception ex)
             {
-                reportProgress?.Invoke(100, $"Error during cleaning: {ex.Message}\r\n");
+                reportProgress?.Invoke(100, $"{LanguageManager.GetTranslation("Browser", "error")}: {ex.Message}\r\n");
             }
         }
+
 
         private static void CleanChromeCache(ProgressReport reportProgress, ref int currentProgress, int totalBrowsers)
         {
@@ -173,13 +174,14 @@ namespace MiniCleanerTool.Browser
         {
             if (!Directory.Exists(path))
             {
-                reportProgress?.Invoke(0, $"Directory not found: {path}\r\n");
+                reportProgress?.Invoke(0, $"{LanguageManager.GetTranslation("Browser", "dir_not_found")}: {path}\r\n");
                 return;
             }
 
             try
             {
-                reportProgress?.Invoke(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Pulizia percorso: {path}\r\n");
+                reportProgress?.Invoke(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Browser", "starting_cleaning")}: {path}\r\n");
+
                 var files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
                 for (int i = 0; i < files.Length; i++)
                 {
@@ -189,12 +191,13 @@ namespace MiniCleanerTool.Browser
                         File.Delete(files[i]);
                         if (i % 10 == 0)
                         {
-                            reportProgress?.Invoke(0, $"Eliminato {i + 1}/{files.Length} files in {path}\r\n");
+                            reportProgress?.Invoke(0, $"{LanguageManager.GetTranslation("Browser", "deleted_files")} {i + 1}/{files.Length} {path}\r\n");
                         }
                     }
                     catch (UnauthorizedAccessException) { }
                     catch (IOException) { }
                 }
+
                 var dirs = Directory.GetDirectories(path);
                 for (int i = 0; i < dirs.Length; i++)
                 {
@@ -203,19 +206,20 @@ namespace MiniCleanerTool.Browser
                         Directory.Delete(dirs[i], true);
                         if (i % 2 == 0)
                         {
-                            reportProgress?.Invoke(0, $"Eliminato {i + 1}/{dirs.Length} percorso in {path}\r\n");
+                            reportProgress?.Invoke(0, $"{LanguageManager.GetTranslation("Browser", "deleted_dirs")} {i + 1}/{dirs.Length} {path}\r\n");
                         }
                     }
                     catch (UnauthorizedAccessException) { }
                     catch (IOException) { }
                 }
 
-                reportProgress?.Invoke(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Pulizia percorso completata : {path}\r\n");
+                reportProgress?.Invoke(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Browser", "cleaning_complete")}: {path}\r\n");
             }
             catch (Exception ex)
             {
-                reportProgress?.Invoke(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Errore pulizia {path}: {ex.Message}\r\n");
+                reportProgress?.Invoke(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Browser", "cleaning_error")}: {path}: {ex.Message}\r\n");
             }
         }
+
     }
 }

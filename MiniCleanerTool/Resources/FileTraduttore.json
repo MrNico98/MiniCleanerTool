@@ -1,8 +1,10 @@
 {
   "Global": {
     "en": {
+      "errore": "Error:"
     },
     "it": {
+      "errore": "Errore:"
     }
   },
   "Form1": {
@@ -63,7 +65,7 @@
       "puliziaDirectX": "Pulizia della cache DirectX Shader",
       "rimozioneCacheIE": "Rimozione della cache Internet Explorer e vecchie app",
       "ultimaPulizia": "🕓 Ultima pulizia effettuata",
-      "registrohome": "Pulizia Registro",
+      "registrohome": "Vuoi iniziare la pulizia del Registro?",
       "puliziaRegistroTitolo": "Pulizia Registro",
       "puliziaDllMancanti": "Pulizia di DLL mancanti",
       "puliziaKeyVuote": "Pulizia di Key vuote",
@@ -71,7 +73,7 @@
       "puliziaDisinstallazioniNonValide": "Pulizia delle voci di disinstallazione non valide",
       "puliziaUserAssist": "Pulizia della cronologia UserAssist",
       "puliziaRecentDocs": "Pulizia della cronologia RecentDocs",
-      "browserhome": "Pulizia cache Browser",
+      "browserhome": "Pulire la cache dei Browser?",
       "puliziaBrowserTitolo": "Pulizia cache Browser",
       "puliziaEdge": "Pulizia cache di Edge",
       "puliziaChrome": "Pulizia cache di Chrome",
@@ -95,6 +97,134 @@
     "it": {
       "restart_required_message": "La lingua sarà applicata dopo il riavvio dell'app. Riavviare ora?",
       "restart_required_title": "Riavvio necessario"
+    }
+  },
+  "Regedit": {
+    "en": {
+      "start_cleaning_registry": "Starting registry cleaning...",
+      "cleaning_completed_successfully": "Registry cleaning completed successfully!",
+      "error_during_cleaning": "ERROR during cleaning",
+      "start_cleaning_empty_keys": "Starting cleaning of empty registry keys...",
+      "empty_keys_cleaning_completed": "Empty registry keys cleaning completed successfully!",
+      "error_cleaning_empty_keys": "ERROR during cleaning empty registry keys",
+      "removed_empty_key": "Removed empty key",
+      "removed_empty_main_key": "Removed empty main key",
+      "verificadllmancanti": "Verifying missing DLLs...",
+      "rimossavoceperdll": "Removed entry for missing DLL",
+      "trovatoesecuzionemancante": "Found execution entry with missing file",
+      "rimossavocesecuzionemancante": "Removed execution entry for missing file",
+      "trovatoesecuzionemancantehkml": "Found execution entry with missing file (HKLM)",
+      "rimossavocesecuzionemancantehkml": "Removed execution entry for missing file (HKLM)",
+      "puliziavocididisinstallazione": "Cleaning invalid uninstall entries",
+      "trovatoesodisinstallazionepercorsononvalido": "Found uninstall entry with invalid path",
+      "trovatoesodisinstallazionenonvalida": "Found uninstall entry with invalid command",
+      "rimossavocididisinstallazionenonvalida": "Removed invalid uninstall entry",
+      "puliziacronologiauserassist": "Cleaning UserAssist history",
+      "cronologiauserassistpulita": "Cleaned UserAssist history.",
+      "errorepuliziacronologiauserassist": "Error cleaning UserAssist history",
+      "errorerimozionevalore": "Error removing value",
+      "erroreaccessosottochiave": "Error accessing subkey",
+      "puliziacronologiarecentdocs": "Cleaning RecentDocs history",
+      "cronologiarecentdocspulita": "Cleaned RecentDocs history.",
+      "errorepuliziacronologiarecentdocs": "Error cleaning RecentDocs history"
+    },
+    "it": {
+      "start_cleaning_registry": "Inizio pulizia del registro...",
+      "cleaning_completed_successfully": "Pulizia del registro completata con successo!",
+      "error_during_cleaning": "ERRORE durante la pulizia",
+      "start_cleaning_empty_keys": "Inizio pulizia delle chiavi di registro vuote...",
+      "empty_keys_cleaning_completed": "Pulizia delle chiavi vuote completata con successo!",
+      "error_cleaning_empty_keys": "ERRORE durante la pulizia delle chiavi vuote",
+      "removed_empty_key": "Rimossa chiave vuota",
+      "removed_empty_main_key": "Rimossa chiave principale vuota",
+      "verificadllmancanti": "Verifica delle DLL mancanti in corso...",
+      "rimossavoceperdll": "Rimossa voce per DLL mancante",
+      "trovatoesecuzionemancante": "Trovata voce di esecuzione con file mancante",
+      "rimossavocesecuzionemancante": "Rimossa voce di esecuzione per file mancante",
+      "trovatoesecuzionemancantehkml": "Trovata voce di esecuzione con file mancante (HKLM)",
+      "rimossavocesecuzionemancantehkml": "Rimossa voce di esecuzione per file mancante (HKLM)",
+      "puliziavocididisinstallazione": "Pulizia delle voci di disinstallazione non valide",
+      "trovatoesodisinstallazionepercorsononvalido": "Trovata voce di disinstallazione con percorso non valido",
+      "trovatoesodisinstallazionenonvalida": "Trovata voce di disinstallazione con comando non valido",
+      "rimossavocididisinstallazionenonvalida": "Rimossa voce di disinstallazione non valida",
+      "puliziacronologiauserassist": "Pulizia della cronologia UserAssist",
+      "cronologiauserassistpulita": "Cronologia UserAssist pulita.",
+      "errorepuliziacronologiauserassist": "Errore durante la pulizia della cronologia UserAssist",
+      "errorerimozionevalore": "Errore durante la rimozione del valore",
+      "erroreaccessosottochiave": "Errore durante l'accesso alla sottochiave",
+      "puliziacronologiarecentdocs": "Pulizia della cronologia RecentDocs",
+      "cronologiarecentdocspulita": "Cronologia RecentDocs pulita.",
+      "errorepuliziacronologiarecentdocs": "Errore durante la pulizia della cronologia RecentDocs"
+    }
+  },
+  "Browser": {
+    "en": {
+      "startingclean": "Starting browser cache cleaning...",
+      "chrome": "Cleaning Chrome cache...",
+      "edge": "Cleaning Edge cache...",
+      "firefox": "Cleaning Firefox cache...",
+      "opera": "Cleaning Opera cache...",
+      "brave": "Cleaning Brave cache...",
+      "vivaldi": "Cleaning Vivaldi cache...",
+      "safari": "Cleaning Safari cache...",
+      "ie": "Cleaning Internet Explorer cache...",
+      "completed": "Browser cache cleaning completed successfully!",
+      "error": "Error during cleaning",
+      "dir_not_found": "Directory not found",
+      "starting_cleaning": "Starting cleaning path",
+      "deleted_files": "Deleted files:",
+      "deleted_dirs": "Deleted folders:",
+      "cleaning_complete": "Cleaning completed for",
+      "cleaning_error": "Error cleaning"
+    },
+    "it": {
+      "startingclean": "Avvio pulizia cache browser...",
+      "chrome": "Pulizia cache Chrome...",
+      "edge": "Pulizia cache Edge...",
+      "firefox": "Pulizia cache Firefox...",
+      "opera": "Pulizia cache Opera...",
+      "brave": "Pulizia cache Brave...",
+      "vivaldi": "Pulizia cache Vivaldi...",
+      "safari": "Pulizia cache Safari...",
+      "ie": "Pulizia cache Internet Explorer...",
+      "completed": "Pulizia cache browser completata con successo!",
+      "error": "Errore durante la pulizia",
+      "dir_not_found": "Directory non trovata",
+      "starting_cleaning": "Pulizia percorso",
+      "deleted_files": "Eliminati file:",
+      "deleted_dirs": "Eliminate cartelle:",
+      "cleaning_complete": "Pulizia completata per",
+      "cleaning_error": "Errore pulizia"
+    }
+  },
+  "Cleaner": {
+    "en": {
+      "file_deleted": "Deleted file",
+      "folder_deleted": "Deleted folder",
+      "cleaning_complete_all": "System cleanup of temporary files, cache, and leftovers completed"
+    },
+    "it": {
+      "file_deleted": "File eliminato",
+      "folder_deleted": "Cartella eliminata",
+      "cleaning_complete_all": "Pulizia completa di file temporanei, cache e residui di sistema"
+    }
+  },
+  "Info": {
+    "en": {
+      "versioneclient": "Client version:",
+      "versioneserver": "Server version:",
+      "versioneserverup": "New version available",
+      "releasednotes": "Release notes",
+      "updatequestion": "Do you want to update now?",
+      "updateavailable": "Update Available"
+    },
+    "it": {
+      "versioneclient": "Versione Client:",
+      "versioneserver": "Versione Server:",
+      "versioneserverup": "Nuova versione disponibile",
+      "releasednotes": "Note di rilascio",
+      "updatequestion": "Vuoi aggiornare ora?",
+      "updateavailable": "Aggiornamento Disponibile"
     }
   }
 }
