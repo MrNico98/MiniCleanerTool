@@ -1,30 +1,12 @@
 {
-  "version": "0.0.0.1",
+  "version": "0.0.0.2",
   "releaseNotes": {
     "IT": [
-      "Potenziata pulizia file del sistema con:",
-      "Controllo Dimensione e Pulizia del Cestino",
-      "Controllo Dimensione e Gestione File di Crash e Log",
-      "Controllo Dimensione e Gestione Cartella Download",
-      "Verifica e segnalazione di file superiori a 2 GB",
-      "",
-      "Potenziata Pulizia Registri con:",
-      "Pulizia Chiavi ActiveX/COM non valida",
-      "Pulizia Chiavi CLSID non valida",
-      "Pulizia Chiavi Obsolete di Servizi"
+      "Fix codice pulizia regedit"
     ],
     "EN": [
-      "Enhanced system file cleaning with:",
-      "Size Control and Recycle Bin Cleaning",
-      "Size Control and Management of Crash and Log Files",
-      "Size Control and Management of Download Folders",
-      "Verification and reporting of files larger than 2 GB",
-      "",
-      "Enhanced Registry Cleaning with:",
-      "Cleaning of Invalid ActiveX/COM Keys",
-      "Cleaning of Invalid CLSID Keys",
-      "Cleaning of Obsolete Service Keys"
+      "Fix code clean regedit"
     ]
   },
-  "updateUrl": "https://github.com/MrNico98/MiniCleanerTool/releases/download/Release-v.0.0.0.1/MiniCleanerTool.exe"
+  "updateUrl": "https://github.com/MrNico98/MiniCleanerTool/releases/download/Release-v.0.0.0.2/MiniCleanerTool.exe"
 }
