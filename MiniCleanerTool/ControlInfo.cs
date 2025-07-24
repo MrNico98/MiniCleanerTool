@@ -10,7 +10,7 @@ namespace MiniCleanerTool
     public partial class ControlInfo : UserControl
     {
         private static readonly HttpClient client = new HttpClient();
-        private string currentVersion = "0.0.0.0";
+        private string currentVersion = "0.0.0.3";
         private string updateUrl;
         private string latestVersion;
         private UpdateInfo _updateInfo;
@@ -199,8 +199,17 @@ namespace MiniCleanerTool
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
-            string selectedLanguage = aloneComboBox1.SelectedItem?.ToString().ToLower();
-            ChangeLanguageAndPromptRestart(selectedLanguage);
+            string currentLanguage = Properties.Settings.Default.Language;
+            if (currentLanguage == "en")
+            {
+                ChangeLanguageAndPromptRestart("it");
+                pictureBox3.Image = Properties.Resources.italy;
+            }
+            else
+            {
+                ChangeLanguageAndPromptRestart("en");
+                pictureBox3.Image = Properties.Resources.united_kingdom;
+            }
         }
 
         private void aloneComboBox1_SelectedIndexChanged(object sender, EventArgs e)

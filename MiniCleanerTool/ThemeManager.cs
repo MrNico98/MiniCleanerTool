@@ -26,24 +26,49 @@ namespace MiniCleanerTool
         {
             Color backColor = darkTheme ? Color.FromArgb(32, 32, 32) : Color.White;
             Color foreColor = darkTheme ? Color.White : Color.Black;
+
             control.BackColor = backColor;
             control.ForeColor = foreColor;
-            if (control is ReaLTaiizor.Controls.DungeonHeaderLabel materialLabel)
-            {
-                if (materialLabel.Visible)
-                {
-                    materialLabel.ForeColor = darkTheme ? Color.White : Color.Black;
-                }
-                else
-                {
 
+            // Gestione specifica per DungeonHeaderLabel
+            if (control is ReaLTaiizor.Controls.DungeonHeaderLabel headerLabel)
+            {
+                if (headerLabel.Visible)
+                {
+                    headerLabel.ForeColor = foreColor;
                 }
             }
+
+            // Gestione specifica per AirCheckBox
+            if (control is ReaLTaiizor.Controls.AirCheckBox airCheckBox)
+            {
+                if (airCheckBox.Visible)
+                {
+                    // Cloniamo i colori attuali per modificarli
+                    var colors = airCheckBox.Colors;
+
+                    for (int i = 0; i < colors.Length; i++)
+                    {
+                        if (colors[i].Name == "GradientBottomNormal")
+                        {
+                            colors[i].Value = darkTheme ? Color.FromArgb(45, 45, 45) : Color.FromArgb(240, 240, 240);
+                        }
+                        else if (colors[i].Name == "Text")
+                        {
+                            colors[i].Value = darkTheme ? Color.White : Color.Black;
+                        }
+                    }
+
+                    airCheckBox.Colors = colors;
+                    airCheckBox.Refresh(); // Applica i nuovi colori
+                }
+            }
+
+            // Ricorsione sui figli
             foreach (Control child in control.Controls)
             {
                 ApplyThemeToControl(child, darkTheme);
             }
         }
     }
-
 }

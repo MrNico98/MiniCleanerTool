@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "ZksOb+EXVFA=",
+  "dgSpecHash": "eq3oEK93T2E=",
   "success": true,
-  "projectFilePath": "C:\\Users\\utente\\source\\repos\\MiniCCleaner\\MiniCleanerTool\\MiniCleanerTool.csproj",
+  "projectFilePath": "C:\\Users\\utente\\source\\repos\\MiniCleanerTool\\MiniCleanerTool\\MiniCleanerTool.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\utente\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.18\\microsoft.net.illink.tasks.8.0.18.nupkg.sha512",
     "C:\\Users\\utente\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\utente\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\utente\\.nuget\\packages\\microsoft.win32.registry.accesscontrol\\9.0.6\\microsoft.win32.registry.accesscontrol.9.0.6.nupkg.sha512",

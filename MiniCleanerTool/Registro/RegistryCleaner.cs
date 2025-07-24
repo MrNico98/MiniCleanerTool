@@ -27,19 +27,23 @@ namespace MiniCleanerTool.Registro
         {
             try
             {
-                await Task.Delay(3000);
+                await Task.Delay(2000);
                 callback(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "start_cleaning_registry")}\n");
-                await Task.Delay(3000);
+                await Task.Delay(2000);
                 CheckMissingDlls(callback);
-                await Task.Delay(5000);
-                CleanInvalidUninstallEntries(callback);
-                await Task.Delay(5000);
+                await Task.Delay(3000);
                 CleanInvalidStartupEntries(callback);
-                await Task.Delay(5000);
+                await Task.Delay(3000);
                 CleanUserAssistHistory(callback);
-                await Task.Delay(5000);
+                await Task.Delay(3000);
                 CleanRecentDocsHistory(callback);
-                await Task.Delay(5000);
+                await Task.Delay(3000);
+                CleanOrphanedServices(callback);
+                await Task.Delay(3000);
+                CleanActiveXControls(callback);
+                await Task.Delay(3000);
+                CleanInvalidCLSID(callback);
+                await Task.Delay(3000);
                 CleanRegistry(callback);
                 await Task.Delay(2000);
                 callback(100, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "cleaning_completed_successfully")}\n");
@@ -47,6 +51,72 @@ namespace MiniCleanerTool.Registro
             catch (Exception ex)
             {
                 callback(-1, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "error_during_cleaning")}: {ex.Message}\n");
+            }
+        }
+
+        private static void CleanOrphanedServices(ProgressLogCallback callback)
+        {
+            try
+            {
+                using RegistryKey servicesKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services", writable: true);
+                foreach (string subKey in servicesKey.GetSubKeyNames())
+                {
+                    using RegistryKey service = servicesKey.OpenSubKey(subKey);
+                    if (service?.GetValue("ImagePath") == null)
+                    {
+                        servicesKey.DeleteSubKeyTree(subKey, false);
+                        callback(0, $"✔ {LanguageManager.GetTranslation("Regedit", "orphaned_service_removed")}: {subKey}\n");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                callback(0, $"❌ {LanguageManager.GetTranslation("Regedit", "error_cleaning_services")}: {ex.Message}\n");
+            }
+        }
+
+        private static void CleanInvalidCLSID(ProgressLogCallback callback)
+        {
+            try
+            {
+                using RegistryKey clsidKey = Registry.ClassesRoot.OpenSubKey(@"CLSID", writable: true);
+                foreach (string subKey in clsidKey.GetSubKeyNames())
+                {
+                    using RegistryKey currentKey = clsidKey.OpenSubKey(subKey);
+                    if (currentKey == null || currentKey.GetValue("") == null)
+                    {
+                        clsidKey.DeleteSubKeyTree(subKey, false);
+                        callback(0, $"✔ {LanguageManager.GetTranslation("Regedit", "orphaned_clsid_removed")}: {subKey}\n");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                callback(0, $"❌ {LanguageManager.GetTranslation("Regedit", "error_cleaning_clsid")}: {ex.Message}\n");
+            }
+        }
+
+        private static void CleanActiveXControls(ProgressLogCallback callback)
+        {
+            try
+            {
+                using RegistryKey activeXKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\SharedDLLs", writable: true);
+                if (activeXKey != null)
+                {
+                    foreach (string valueName in activeXKey.GetValueNames())
+                    {
+                        int usageCount = Convert.ToInt32(activeXKey.GetValue(valueName));
+                        if (usageCount == 0)
+                        {
+                            activeXKey.DeleteValue(valueName, false);
+                            callback(0, $"✔ {LanguageManager.GetTranslation("Regedit", "unused_dll_removed")}: {valueName}\n");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                callback(0, $"❌ {LanguageManager.GetTranslation("Regedit", "error_cleaning_activex")}: {ex.Message}\n");
             }
         }
 
@@ -271,75 +341,6 @@ namespace MiniCleanerTool.Registro
                 }
             }
         }
-
-        private static void CleanInvalidUninstallEntries(ProgressLogCallback callback)
-        {
-            callback(30, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "puliziavocididisinstallazione")}\n");
-
-            try
-            {
-                using (var uninstallKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", false))
-                {
-                    if (uninstallKey == null) return;
-
-                    var subKeyNames = uninstallKey.GetSubKeyNames();
-                    foreach (var subKeyName in subKeyNames)
-                    {
-                        try
-                        {
-                            using (var appKey = uninstallKey.OpenSubKey(subKeyName, true))
-                            {
-                                if (appKey == null) continue;
-                                var displayName = appKey.GetValue("DisplayName")?.ToString();
-                                var installLocation = appKey.GetValue("InstallLocation")?.ToString();
-                                var uninstallString = appKey.GetValue("UninstallString")?.ToString();
-
-                                if (string.IsNullOrEmpty(displayName)) continue;
-
-                                bool isValid = true;
-                                if (!string.IsNullOrEmpty(installLocation) && !Directory.Exists(installLocation))
-                                {
-                                    isValid = false;
-                                    callback(35, $"{LanguageManager.GetTranslation("Regedit", "trovatoesodisinstallazionepercorsononvalido")}: {displayName}\n");
-                                }
-
-                                if (!string.IsNullOrEmpty(uninstallString))
-                                {
-                                    var uninstallExe = uninstallString.Split(' ')[0].Trim('"');
-                                    if (!File.Exists(uninstallExe))
-                                    {
-                                        isValid = false;
-                                        callback(35, $"{LanguageManager.GetTranslation("Regedit", "trovatoesodisinstallazionenonvalida")}: {displayName}\n");
-                                    }
-                                }
-
-                                if (!isValid)
-                                {
-                                    try
-                                    {
-                                        Registry.LocalMachine.DeleteSubKeyTree($@"Software\Microsoft\Windows\CurrentVersion\Uninstall\{subKeyName}");
-                                        callback(35, $"{LanguageManager.GetTranslation("Regedit", "rimossavocididisinstallazionenonvalida")}: {displayName}\n");
-                                    }
-                                    catch (Exception ex)
-                                    {
-
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
 
         private static void CleanInvalidStartupEntries(ProgressLogCallback callback)
         {

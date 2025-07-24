@@ -31,13 +31,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tableLayoutPanel1 = new TableLayoutPanel();
             panel1 = new Panel();
+            btnRegistro = new Button();
             dungeonLabel3 = new ReaLTaiizor.Controls.DungeonLabel();
             btnInfo = new Button();
+            btnPulisci = new Button();
             btnHome = new Button();
             btnBrowser = new Button();
             pictureBox1 = new PictureBox();
-            btnRegistro = new Button();
-            btnPulisci = new Button();
             panel2 = new Panel();
             panel4 = new Panel();
             smallLabel1 = new ReaLTaiizor.Controls.SmallLabel();
@@ -67,15 +67,26 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(btnRegistro);
             panel1.Controls.Add(dungeonLabel3);
             panel1.Controls.Add(btnInfo);
+            panel1.Controls.Add(btnPulisci);
             panel1.Controls.Add(btnHome);
             panel1.Controls.Add(btnBrowser);
             panel1.Controls.Add(pictureBox1);
-            panel1.Controls.Add(btnRegistro);
-            panel1.Controls.Add(btnPulisci);
             resources.ApplyResources(panel1, "panel1");
             panel1.Name = "panel1";
+            // 
+            // btnRegistro
+            // 
+            resources.ApplyResources(btnRegistro, "btnRegistro");
+            btnRegistro.Cursor = Cursors.Hand;
+            btnRegistro.Image = Properties.Resources.gifHomeRegistro;
+            btnRegistro.Name = "btnRegistro";
+            btnRegistro.UseVisualStyleBackColor = true;
+            btnRegistro.Click += btnRegistro_Click;
+            btnRegistro.MouseLeave += btnRegistro_MouseLeave;
+            btnRegistro.MouseHover += btnRegistro_MouseHover;
             // 
             // dungeonLabel3
             // 
@@ -94,6 +105,17 @@
             btnInfo.Click += btnInfo_Click;
             btnInfo.MouseLeave += btnInfo_MouseLeave;
             btnInfo.MouseHover += btnInfo_MouseHover;
+            // 
+            // btnPulisci
+            // 
+            resources.ApplyResources(btnPulisci, "btnPulisci");
+            btnPulisci.Cursor = Cursors.Hand;
+            btnPulisci.Image = Properties.Resources.gifHomePuliziaPC;
+            btnPulisci.Name = "btnPulisci";
+            btnPulisci.UseVisualStyleBackColor = true;
+            btnPulisci.Click += btnPulisci_Click;
+            btnPulisci.MouseLeave += btnPulisci_MouseLeave;
+            btnPulisci.MouseHover += btnPulisci_MouseHover;
             // 
             // btnHome
             // 
@@ -124,36 +146,14 @@
             pictureBox1.Name = "pictureBox1";
             pictureBox1.TabStop = false;
             // 
-            // btnRegistro
-            // 
-            resources.ApplyResources(btnRegistro, "btnRegistro");
-            btnRegistro.Cursor = Cursors.Hand;
-            btnRegistro.Image = Properties.Resources.gifHomeRegistro;
-            btnRegistro.Name = "btnRegistro";
-            btnRegistro.UseVisualStyleBackColor = true;
-            btnRegistro.Click += btnRegistro_Click;
-            btnRegistro.MouseLeave += btnRegistro_MouseLeave;
-            btnRegistro.MouseHover += btnRegistro_MouseHover;
-            // 
-            // btnPulisci
-            // 
-            resources.ApplyResources(btnPulisci, "btnPulisci");
-            btnPulisci.Cursor = Cursors.Hand;
-            btnPulisci.Image = Properties.Resources.gifHomePuliziaPC;
-            btnPulisci.Name = "btnPulisci";
-            btnPulisci.UseVisualStyleBackColor = true;
-            btnPulisci.Click += btnPulisci_Click;
-            btnPulisci.MouseLeave += btnPulisci_MouseLeave;
-            btnPulisci.MouseHover += btnPulisci_MouseHover;
-            // 
             // panel2
             // 
+            resources.ApplyResources(panel2, "panel2");
             panel2.BackColor = Color.White;
             panel2.Controls.Add(panel4);
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(dangeonHeardelabel);
             panel2.Controls.Add(rtbDescription);
-            resources.ApplyResources(panel2, "panel2");
             panel2.Name = "panel2";
             // 
             // panel4

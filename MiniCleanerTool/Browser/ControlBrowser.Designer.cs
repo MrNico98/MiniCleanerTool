@@ -57,6 +57,7 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.Top;
             pictureBox1.Image = Properties.Resources.gifBrowserBrowser;
             pictureBox1.Location = new Point(263, 52);
             pictureBox1.Name = "pictureBox1";

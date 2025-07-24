@@ -126,7 +126,14 @@
       "erroreaccessosottochiave": "Error accessing subkey",
       "puliziacronologiarecentdocs": "Cleaning RecentDocs history",
       "cronologiarecentdocspulita": "Cleaned RecentDocs history.",
-      "errorepuliziacronologiarecentdocs": "Error cleaning RecentDocs history"
+      "errorepuliziacronologiarecentdocs": "Error cleaning RecentDocs history",
+      "orphaned_service_removed": "Orphaned service removed",
+      "error_cleaning_services": "Error during service cleanup",
+      "orphaned_clsid_removed": "Orphaned CLSID removed",
+      "error_cleaning_clsid": "Error during CLSID cleanup",
+      "unused_dll_removed": "Unused DLL removed",
+      "error_cleaning_activex": "Error during ActiveX/COM cleanup",
+      "puliziavocidiavviononvalide": "Cleaning invalid startup entries"
     },
     "it": {
       "start_cleaning_registry": "Inizio pulizia del registro...",
@@ -154,7 +161,14 @@
       "erroreaccessosottochiave": "Errore durante l'accesso alla sottochiave",
       "puliziacronologiarecentdocs": "Pulizia della cronologia RecentDocs",
       "cronologiarecentdocspulita": "Cronologia RecentDocs pulita.",
-      "errorepuliziacronologiarecentdocs": "Errore durante la pulizia della cronologia RecentDocs"
+      "errorepuliziacronologiarecentdocs": "Errore durante la pulizia della cronologia RecentDocs",
+      "orphaned_service_removed": "Servizio orfano rimosso",
+      "error_cleaning_services": "Errore nella pulizia dei servizi",
+      "orphaned_clsid_removed": "CLSID orfano rimosso",
+      "error_cleaning_clsid": "Errore nella pulizia dei CLSID",
+      "unused_dll_removed": "DLL inutilizzata rimossa",
+      "error_cleaning_activex": "Errore nella pulizia dei controlli ActiveX/COM",
+      "puliziavocidiavviononvalide": "Pulizia delle voci di avvio non valide"
     }
   },
   "Browser": {
@@ -201,12 +215,14 @@
     "en": {
       "file_deleted": "Deleted file",
       "folder_deleted": "Deleted folder",
-      "cleaning_complete_all": "System cleanup of temporary files, cache, and leftovers completed"
+      "cleaning_complete_all": "System cleanup of temporary files, cache, and leftovers completed",
+      "cestino": "Recycle bin"
     },
     "it": {
       "file_deleted": "File eliminato",
       "folder_deleted": "Cartella eliminata",
-      "cleaning_complete_all": "Pulizia completa di file temporanei, cache e residui di sistema"
+      "cleaning_complete_all": "Pulizia completa di file temporanei, cache e residui di sistema",
+      "cestino": "Cestino"
     }
   },
   "Info": {
