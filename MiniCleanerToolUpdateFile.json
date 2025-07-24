@@ -2,11 +2,11 @@
   "version": "0.0.0.3",
   "releaseNotes": {
     "IT": [
-      "Correzione della lingua EN sulla "Pulizia PC""
+      "Correzione della lingua EN sulla Pulizia PC"
     ],
     "EN": [
-      "Fixed the IT language in "PC Cleanup""
+      "Fixed the IT language in PC Cleanup"
     ]
   },
-  "updateUrl": "https://github.com/MrNico98/MiniCleanerTool/releases/download/Release-v.0.0.0.2/MiniCleanerTool.exe"
+  "updateUrl": "https://github.com/MrNico98/MiniCleanerTool/releases/download/Release-v.0.0.0.3/MiniCleanerTool.exe"
 }
