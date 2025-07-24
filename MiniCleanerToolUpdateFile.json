@@ -1,11 +1,11 @@
 {
-  "version": "0.0.0.2",
+  "version": "0.0.0.3",
   "releaseNotes": {
     "IT": [
-      "Fix codice pulizia regedit"
+      "Correzione della lingua EN sulla "Pulizia PC""
     ],
     "EN": [
-      "Fix code clean regedit"
+      "Fixed the IT language in "PC Cleanup""
     ]
   },
   "updateUrl": "https://github.com/MrNico98/MiniCleanerTool/releases/download/Release-v.0.0.0.2/MiniCleanerTool.exe"
