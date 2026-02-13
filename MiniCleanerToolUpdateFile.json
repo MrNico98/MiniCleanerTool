@@ -1,14 +1,14 @@
 {
-  "version": "0.0.0.4",
+  "version": "0.0.0.5",
   "releaseNotes": {
     "IT": [
-      "Aggiunta Disinstallazione programmi",
+      "Corretti Alcuni Errori su Disinstallatore → Modalità Cacciatore",
       "Migliorata velocità pulizia PC"
     ],
     "EN": [
-      "Added Program Uninstaller",
+      "Fixed some bugs in Uninstaller → Hunter Mode",
       "Improved PC cleaning speed"
     ]
   },
-  "updateUrl": "https://github.com/MrNico98/MiniCleanerTool/releases/download/Release-v.0.0.0.4/MiniCleanerTool.exe"
+  "updateUrl": "https://github.com/MrNico98/MiniCleanerTool/releases/download/Release-v.0.0.0.5/MiniCleanerTool.exe"
 }
