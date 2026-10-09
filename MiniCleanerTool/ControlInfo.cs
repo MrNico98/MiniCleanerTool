@@ -1,20 +1,16 @@
 ﻿using ReaLTaiizor.Forms;
 using System.Diagnostics;
 using System.Globalization;
-using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace MiniCleanerTool
 {
     public partial class ControlInfo : UserControl
     {
-        private static readonly HttpClient client = new HttpClient();
-        private string currentVersion = "0.0.0.3";
-        private string updateUrl;
-        private string latestVersion;
-        private UpdateInfo _updateInfo;
-        public event Action OnUpdateAvailable;
+        private static readonly HttpClient client = new() { Timeout = TimeSpan.FromSeconds(15) };
+        private const string CurrentVersion = "0.0.0.3";
+        private UpdateInfo? _updateInfo;
+        public event Func<Task>? OnUpdateAvailable;
         public bool isloading = true;
 
         public ControlInfo(bool dark)
@@ -23,8 +19,7 @@ namespace MiniCleanerTool
             ThemeManager.ApplyThemeToControl(this, ThemeManager.IsDarkTheme);
             metroSwitch1.Switched = dark;
             dungeonLabel4.Text = dark ? "Tema scuro" : "Tema chiaro";
-            lblClient.Text = $"{LanguageManager.GetTranslation("Info", "versioneclient")} {currentVersion}";
-            CheckForUpdatesOnStartup();
+            lblClient.Text = $"{LanguageManager.GetTranslation("Info", "versioneclient")} {CurrentVersion}";
             string languageCode = Properties.Settings.Default.Language ?? "en";
             if (isloading == true)
             {
@@ -54,7 +49,7 @@ namespace MiniCleanerTool
             Properties.Settings.Default.DarkTheme = dark;
             Properties.Settings.Default.Save();
         }
-        public async void CheckForUpdatesOnStartup() => await CheckForUpdatesAsync();
+        public Task CheckForUpdatesOnStartup() => CheckForUpdatesAsync();
 
         private async Task CheckForUpdatesAsync()
         {
@@ -62,20 +57,32 @@ namespace MiniCleanerTool
 
             try
             {
-                using (HttpClient client = new HttpClient())
+                string json = await client.GetStringAsync(configUrl);
+                _updateInfo = JsonSerializer.Deserialize<UpdateInfo>(json)
+                    ?? throw new JsonException("Il manifest di aggiornamento è vuoto.");
+                if (!Version.TryParse(_updateInfo.version, out Version? remoteVersion) ||
+                    !Version.TryParse(CurrentVersion, out Version? installedVersion) ||
+                    !Uri.TryCreate(_updateInfo.updateUrl, UriKind.Absolute, out Uri? releaseUri) ||
+                    releaseUri.Scheme != Uri.UriSchemeHttps ||
+                    !releaseUri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase) ||
+                    !releaseUri.AbsolutePath.StartsWith("/MrNico98/MiniCleanerTool/releases/", StringComparison.OrdinalIgnoreCase) ||
+                    _updateInfo.releaseNotes is null)
                 {
-                    string json = await client.GetStringAsync(configUrl);
-                    _updateInfo = JsonSerializer.Deserialize<UpdateInfo>(json);
-                    lblServer.Text = $"{LanguageManager.GetTranslation("Info", "versioneserver")} {_updateInfo.version}";
-                    if (_updateInfo.version != currentVersion)
+                    throw new JsonException("Il manifest contiene versione, note o URL di release non validi.");
+                }
+
+                lblServer.Text = $"{LanguageManager.GetTranslation("Info", "versioneserver")} {_updateInfo.version}";
+                if (remoteVersion > installedVersion)
+                {
+                    btnAggiorna.Visible = true;
+                    if (OnUpdateAvailable is { } updateHandler)
                     {
-                        btnAggiorna.Visible = true;
-                        OnUpdateAvailable?.Invoke();
+                        await updateHandler();
                     }
-                    else
-                    {
-                        btnAggiorna.Visible = false;
-                    }
+                }
+                else
+                {
+                    btnAggiorna.Visible = false;
                 }
             }
             catch (Exception ex)
@@ -84,74 +91,23 @@ namespace MiniCleanerTool
             }
         }
 
-        private async Task DownloadAndUpdate(string updateUrl, string version)
-        {
-            string updateFilePath = Path.Combine(Path.GetTempPath(), $"MiniCreationTool{version}.exe");
-            using (var progressForm = new ProgressForm())
-            {
-                progressForm.Show();
-                progressForm.SetMarquee();
-                try
-                {
-                    await DownloadFileWithProgress(updateUrl, updateFilePath, progressForm);
-                    string localAppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MiniCleanerTool");
-                    try
-                    {
-                        if (Directory.Exists(localAppDataPath))
-                            Directory.Delete(localAppDataPath, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"{LanguageManager.GetTranslation("Global", "errore")} {ex.Message}", "MiniCleanerTool");
-                    }
-
-                    string currentExecutablePath = Application.ExecutablePath;
-                    File.Move(currentExecutablePath, Path.ChangeExtension(currentExecutablePath, ".old"), true);
-                    File.Move(updateFilePath, currentExecutablePath);
-                    Process.Start(currentExecutablePath);
-                    Application.Exit();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"{LanguageManager.GetTranslation("Global", "errore")} {ex.Message}", "MiniCleanerTool");
-                }
-                finally
-                {
-                    progressForm.CompleteOperation();
-                }
-            }
-        }
-
-
-        private async Task DownloadFileWithProgress(string url, string filePath, ProgressForm progressForm)
-        {
-            using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-            var totalBytes = response.Content.Headers.ContentLength.GetValueOrDefault();
-            using var contentStream = await response.Content.ReadAsStreamAsync();
-            using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
-            var buffer = new byte[8192];
-            long bytesRead = 0;
-            int read;
-            while ((read = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
-            {
-                await fileStream.WriteAsync(buffer, 0, read);
-                bytesRead += read;
-                progressForm.Invoke(new Action(() => progressForm.SetStatus("Download...", (int)((bytesRead * 100) / totalBytes))));
-            }
-        }
-
         private async void btnAggiorna_Click(object sender, EventArgs e)
         {
+            if (_updateInfo is null)
+            {
+                return;
+            }
+
             string culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper();
-            string releaseNotes = _updateInfo.releaseNotes.ContainsKey(culture)
-                ? string.Join("\n", _updateInfo.releaseNotes[culture])
-                : string.Join("\n", _updateInfo.releaseNotes["EN"]);
+            string releaseNotes = _updateInfo.releaseNotes.TryGetValue(culture, out string[]? localizedNotes)
+                ? string.Join("\n", localizedNotes)
+                : string.Join("\n", _updateInfo.releaseNotes.GetValueOrDefault("EN", []));
 
             var dialogResult = MessageBox.Show(
                 $"{LanguageManager.GetTranslation("Info", "versioneserverup")}: {_updateInfo.version}\n\n" +
                 $"{LanguageManager.GetTranslation("Info", "releasednotes")}\n{releaseNotes}\n\n" +
-                $"{LanguageManager.GetTranslation("Info", "updatequestion")}",
+                $"{LanguageManager.GetTranslation("Info", "updatequestion")}\n\n" +
+                "L'app aprirà la pagina della release; il file non viene installato automaticamente. Verifica provenienza e firma/hash prima di avviarlo.",
                 LanguageManager.GetTranslation("Info", "updateavailable"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
@@ -159,7 +115,14 @@ namespace MiniCleanerTool
 
             if (dialogResult == DialogResult.Yes)
             {
-                await DownloadAndUpdate(_updateInfo.updateUrl, _updateInfo.version);
+                try
+                {
+                    Process.Start(new ProcessStartInfo(_updateInfo.updateUrl) { UseShellExecute = true });
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show($"Impossibile aprire la pagina della release: {exception.Message}", "MiniCleanerTool");
+                }
             }
         }
 
@@ -212,14 +175,14 @@ namespace MiniCleanerTool
             }
         }
 
-        private void aloneComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void aloneComboBox1_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            string selectedLanguage = aloneComboBox1.SelectedItem?.ToString().ToLower();
+            string? selectedLanguage = aloneComboBox1.SelectedItem?.ToString()?.ToLowerInvariant();
             ChangeLanguageAndPromptRestart(selectedLanguage);
         }
 
 
-        private void ChangeLanguageAndPromptRestart(string selectedLanguage)
+        private void ChangeLanguageAndPromptRestart(string? selectedLanguage)
         {
             if (string.IsNullOrEmpty(selectedLanguage)) return;
 
@@ -246,8 +209,8 @@ namespace MiniCleanerTool
 
     public class UpdateInfo
     {
-        public string version { get; set; }
-        public Dictionary<string, string[]> releaseNotes { get; set; }
-        public string updateUrl { get; set; }
+        public string version { get; set; } = string.Empty;
+        public Dictionary<string, string[]> releaseNotes { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+        public string updateUrl { get; set; } = string.Empty;
     }
 }

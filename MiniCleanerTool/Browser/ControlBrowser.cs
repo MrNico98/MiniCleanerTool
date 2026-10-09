@@ -12,13 +12,13 @@ namespace MiniCleanerTool
             InitializeComponent();
         }
 
-        public void IniziaPulizia()
+        public async Task IniziaPulizia()
         {
-            MiniCleanerTool.Browser.BrowserCleaner.CleanAllBrowsers((progress, log) =>
+            await Task.Run(() => MiniCleanerTool.Browser.BrowserCleaner.CleanAllBrowsers((progress, log) =>
             {
                 SetProgress(progress);
                 SetLog(log);            
-            });
+            }));
         }
 
         private void SetProgress(int value)

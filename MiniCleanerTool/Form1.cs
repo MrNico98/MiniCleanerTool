@@ -5,10 +5,6 @@ namespace MiniCleanerTool
 {
     public partial class Form1 : Form
     {
-        private enum AzioneConferma { Nessuna, Pulizia, Registro, Browser, Rete }
-        private bool pulisciconfermato = false;
-        private bool registroconfermato = false;
-        private AzioneConferma azioneCorrente = AzioneConferma.Nessuna;
         private readonly Dictionary<Control, bool> _isAnimating = new Dictionary<Control, bool>();
         private bool aggiornamento = false;
         public Form1()
@@ -35,7 +31,7 @@ namespace MiniCleanerTool
             string helpText = LanguageManager.GetTranslation("Form1", "come_posso_aiutarti");
 
             dangeonHeardelabel.Text = $"{greeting} {userName}, {helpText}";
-            Aggiornamento();
+            Shown += async (_, _) => await Aggiornamento();
         }
 
         public async Task Aggiornamento()
@@ -62,7 +58,7 @@ namespace MiniCleanerTool
                 }
             };
 
-            controlInfo.CheckForUpdatesOnStartup();
+            await controlInfo.CheckForUpdatesOnStartup();
         }
 
 
@@ -348,7 +344,7 @@ namespace MiniCleanerTool
             EndAnimation(control);
         }
 
-        private Button bottoneAttivo = null;
+        private Button? bottoneAttivo;
         private void AttivaBottone(Button btn)
         {
             if (bottoneAttivo != null)
@@ -368,7 +364,6 @@ namespace MiniCleanerTool
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(rtbDescription);
             ThemeManager.SetTheme(Properties.Settings.Default.DarkTheme);
-            azioneCorrente = AzioneConferma.Pulizia;
             bool confermato = await AnimatePanelSlideUpAsync(panel3, LanguageManager.GetTranslation("Form1", "puliziapc"), btnPulisci, 100, 1000, btnPulisci, btnRegistro, btnBrowser);
             AttivaBottone(btnPulisci);
             if (confermato)
@@ -380,21 +375,17 @@ namespace MiniCleanerTool
                 ControlPulizia puliziaControl = new ControlPulizia();
                 puliziaControl.Dock = DockStyle.Fill;
                 panel2.Controls.Add(puliziaControl);
-                await Task.Run(() =>
-                {
-                    puliziaControl.IniziaPulizia();
-                    string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MiniCleanerTool");
-                    Directory.CreateDirectory(folderPath);
-                    string filePath = Path.Combine(folderPath, "pulizia.dat");
-                    File.WriteAllText(filePath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                });
+                await puliziaControl.IniziaPulizia();
+                string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MiniCleanerTool");
+                Directory.CreateDirectory(folderPath);
+                string filePath = Path.Combine(folderPath, "pulizia.dat");
+                File.WriteAllText(filePath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
                 await AnimatePanelSlideDownAsync(panel3);
             }
 
-            azioneCorrente = AzioneConferma.Nessuna;
         }
 
         private void btnPulisci_MouseHover(object sender, EventArgs e)
@@ -443,7 +434,6 @@ namespace MiniCleanerTool
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(rtbDescription);
             ThemeManager.SetTheme(Properties.Settings.Default.DarkTheme);
-            azioneCorrente = AzioneConferma.Registro;
             bool confermato = await AnimatePanelSlideUpAsync(panel3, LanguageManager.GetTranslation("Form1", "registrohome"), btnRegistro, 100, 1000, btnPulisci, btnRegistro, btnBrowser);
             AttivaBottone(btnRegistro);
             if (confermato)
@@ -455,20 +445,16 @@ namespace MiniCleanerTool
                 ControlRegistro registroControl = new ControlRegistro();
                 registroControl.Dock = DockStyle.Fill;
                 panel2.Controls.Add(registroControl);
-                Task.Run(() =>
-                {
-                    registroControl.IniziaPulizia();
-                    string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MiniCleanerTool");
-                    Directory.CreateDirectory(folderPath);
-                    string filePath = Path.Combine(folderPath, "registro.dat");
-                    File.WriteAllText(filePath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                });
+                await registroControl.IniziaPulizia();
+                string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MiniCleanerTool");
+                Directory.CreateDirectory(folderPath);
+                string filePath = Path.Combine(folderPath, "registro.dat");
+                File.WriteAllText(filePath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
                 await AnimatePanelSlideDownAsync(panel3);
             }
-            azioneCorrente = AzioneConferma.Nessuna;
         }
 
         private void btnRegistro_MouseHover(object sender, EventArgs e)
@@ -517,7 +503,6 @@ namespace MiniCleanerTool
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(rtbDescription);
             ThemeManager.SetTheme(Properties.Settings.Default.DarkTheme);
-            azioneCorrente = AzioneConferma.Browser;
             bool confermato = await AnimatePanelSlideUpAsync(panel3, LanguageManager.GetTranslation("Form1", "browserhome"), btnBrowser, 100, 1000, btnPulisci, btnRegistro, btnBrowser);
             AttivaBottone(btnBrowser);
             if (confermato)
@@ -527,20 +512,16 @@ namespace MiniCleanerTool
                 ControlBrowser browserControl = new ControlBrowser();
                 browserControl.Dock = DockStyle.Fill;
                 panel2.Controls.Add(browserControl);
-                Task.Run(() =>
-                {
-                    browserControl.IniziaPulizia();
-                    string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MiniCleanerTool");
-                    Directory.CreateDirectory(folderPath);
-                    string filePath = Path.Combine(folderPath, "browser.dat");
-                    File.WriteAllText(filePath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                });
+                await browserControl.IniziaPulizia();
+                string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MiniCleanerTool");
+                Directory.CreateDirectory(folderPath);
+                string filePath = Path.Combine(folderPath, "browser.dat");
+                File.WriteAllText(filePath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
                 await AnimatePanelSlideDownAsync(panel3);
             }
-            azioneCorrente = AzioneConferma.Nessuna;
         }
 
         private void btnBrowser_MouseHover(object sender, EventArgs e)
@@ -587,34 +568,10 @@ namespace MiniCleanerTool
 
         private void btnConferma_Click(object sender, EventArgs e)
         {
-            switch (azioneCorrente)
-            {
-                case AzioneConferma.Pulizia:
-                    pulisciconfermato = true;
-                    break;
-                case AzioneConferma.Registro:
-                    registroconfermato = true;
-                    break;
-                case AzioneConferma.Browser:
-                    registroconfermato = true;
-                    break;
-            }
         }
 
         private void btnAnnulla_Click(object sender, EventArgs e)
         {
-            switch (azioneCorrente)
-            {
-                case AzioneConferma.Pulizia:
-                    pulisciconfermato = false;
-                    break;
-                case AzioneConferma.Registro:
-                    registroconfermato = false;
-                    break;
-                case AzioneConferma.Browser:
-                    registroconfermato = false;
-                    break;
-            }
         }
 
         private void btnInfo_Click(object sender, EventArgs e)

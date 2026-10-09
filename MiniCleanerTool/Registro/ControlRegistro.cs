@@ -13,13 +13,13 @@ namespace MiniCleanerTool
             ThemeManager.ApplyThemeToControl(this, ThemeManager.IsDarkTheme);
         }
 
-        public void IniziaPulizia()
+        public async Task IniziaPulizia()
         {
-            MiniCleanerTool.Registro.RegistryCleaner.StartRegedit((p, log) =>
+            await Task.Run(() => MiniCleanerTool.Registro.RegistryCleaner.StartRegedit((p, log) =>
             {
                 SetProgress(p);
                 SetLog(log);
-            });
+            }));
         }
 
         private void SetProgress(int value)

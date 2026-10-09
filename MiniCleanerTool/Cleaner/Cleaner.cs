@@ -1,90 +1,131 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Security;
 
-namespace MiniCleanerTool.Cleaner
+namespace MiniCleanerTool.Cleaner;
+
+public static class Cleaner
 {
-    public static class Cleaner
+    private const FileAttributes ReparsePoint = FileAttributes.ReparsePoint;
+    private const FileAttributes DirectoryAttribute = FileAttributes.Directory;
+
+    public static Task CleanSystem(Action<int, string> updateProgress)
     {
-        public static async Task CleanSystem(Action<int, string> updateProgress)
+        ArgumentNullException.ThrowIfNull(updateProgress);
+
+        string windows = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+        string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        string commonData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+
+        string[] directories =
+        [
+            Path.GetTempPath(),
+            Path.Combine(windows, "Temp"),
+            Path.Combine(appData, "Microsoft", "Windows", "Recent"),
+            Path.Combine(localAppData, "CrashDumps"),
+            Path.Combine(localAppData, "Microsoft", "Windows", "WebCache"),
+            Path.Combine(localAppData, "Microsoft", "Windows", "INetCache"),
+            Path.Combine(localAppData, "Microsoft", "Windows", "INetCookies"),
+            Path.Combine(windows, "SoftwareDistribution", "Download"),
+            Path.Combine(windows, "Prefetch"),
+            Path.Combine(windows, "System32", "config", "systemprofile", "AppData", "Local", "Microsoft", "Windows", "DeliveryOptimization"),
+            Path.Combine(userProfile, "AppData", "Local", "D3DSCache"),
+            Path.Combine(userProfile, "AppData", "Local", "Microsoft", "Windows", "History")
+        ];
+
+        foreach (string directory in directories.Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            await Task.Delay(3000);
-
-            List<string> directoriesToClean = new List<string>
- {
-     Path.GetTempPath(),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Temp"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Microsoft\Windows\Recent"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CrashDumps"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Microsoft\Windows\WebCache"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Microsoft\Windows\INetCache"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Microsoft\Windows\INetCookies"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), @"SoftwareDistribution\Download"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), @"Prefetch"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), @"System32\config\systemprofile\AppData\Local\Microsoft\Windows\DeliveryOptimization"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), @"Microsoft\Windows Defender\Scans"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\D3DSCache"),
-     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\Microsoft\Windows\History")
- };
-
-            var fileTasks = directoriesToClean
-                .Where(Directory.Exists)
-                .Select(dir => Task.Run(() => CleanDirectory(dir, updateProgress)))
-                .ToArray();
-
-            await Task.WhenAll(fileTasks);
-
-            updateProgress(100, $"✔️ {LanguageManager.GetTranslation("Cleaner", "cleaning_complete_all")}\n");
+            CleanDirectory(directory, updateProgress);
         }
 
-        private static void CleanDirectory(string dir, Action<int, string> updateProgress)
-        {
-            List<string> filesToDelete = new List<string>();
-            List<string> dirsToDelete = new List<string>();
+        updateProgress(100, $"✔️ {LanguageManager.GetTranslation("Cleaner", "cleaning_complete_all")}\n");
+        return Task.CompletedTask;
+    }
 
+    private static void CleanDirectory(string directory, Action<int, string> updateProgress)
+    {
+        if (!Directory.Exists(directory)) return;
+
+        string root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(directory));
+        var pending = new Stack<(string Path, bool RemoveAfterChildren)>();
+        pending.Push((root, false));
+
+        while (pending.TryPop(out var item))
+        {
+            if (item.RemoveAfterChildren)
+            {
+                try
+                {
+                    Directory.Delete(item.Path, recursive: false);
+                }
+                catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException)
+                {
+                    ReportFailure(updateProgress, item.Path, exception);
+                }
+
+                continue;
+            }
+
+            FileAttributes directoryAttributes;
             try
             {
-                filesToDelete.AddRange(Directory.GetFiles(dir, "*", SearchOption.AllDirectories));
-                dirsToDelete.AddRange(Directory.GetDirectories(dir, "*", SearchOption.AllDirectories));
-
-                int totalItems = filesToDelete.Count + dirsToDelete.Count;
-                int processedItems = 0;
-
-                Parallel.ForEach(filesToDelete, (file) =>
-                {
-                    try
-                    {
-                        File.Delete(file);
-                        Interlocked.Increment(ref processedItems);
-                        int progress = (int)((double)processedItems / totalItems * 100);
-                        updateProgress(progress, $"{DateTime.Now:dd/MM/yyyy - HH.mm} 🗑️ {LanguageManager.GetTranslation("Cleaner", "file_deleted")}: {file}\n");
-                    }
-                    catch
-                    {
-                        Interlocked.Increment(ref processedItems);
-                    }
-                });
-
-                Parallel.ForEach(dirsToDelete.OrderByDescending(d => d.Length), (dirToDelete) =>
-                {
-                    try
-                    {
-                        Directory.Delete(dirToDelete, true);
-                        Interlocked.Increment(ref processedItems);
-                        int progress = (int)((double)processedItems / totalItems * 100);
-                        updateProgress(progress, $"{DateTime.Now:dd/MM/yyyy - HH.mm} 🗑️ {LanguageManager.GetTranslation("Cleaner", "folder_deleted")}: {dirToDelete}\n");
-                    }
-                    catch
-                    {
-                        Interlocked.Increment(ref processedItems);
-                    }
-                });
+                directoryAttributes = File.GetAttributes(item.Path);
             }
-            catch
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException)
             {
+                ReportFailure(updateProgress, item.Path, exception);
+                continue;
+            }
 
+            if ((directoryAttributes & DirectoryAttribute) == 0 || (directoryAttributes & ReparsePoint) != 0)
+            {
+                ReportFailure(updateProgress, item.Path, new IOException("Percorso non directory o reparse point: elemento saltato."));
+                continue;
+            }
+
+            if (!item.Path.Equals(root, StringComparison.OrdinalIgnoreCase))
+            {
+                pending.Push((item.Path, true));
+            }
+
+            IEnumerable<string> entries;
+            try
+            {
+                entries = Directory.EnumerateFileSystemEntries(item.Path).ToArray();
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException)
+            {
+                ReportFailure(updateProgress, item.Path, exception);
+                continue;
+            }
+
+            foreach (string entry in entries)
+            {
+                try
+                {
+                    FileAttributes attributes = File.GetAttributes(entry);
+                    if ((attributes & ReparsePoint) != 0)
+                    {
+                        continue;
+                    }
+
+                    if ((attributes & DirectoryAttribute) != 0)
+                    {
+                        pending.Push((entry, false));
+                        continue;
+                    }
+
+                    File.Delete(entry);
+                    updateProgress(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} 🗑️ {LanguageManager.GetTranslation("Cleaner", "file_deleted")}: {entry}\n");
+                }
+                catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException)
+                {
+                    ReportFailure(updateProgress, entry, exception);
+                }
             }
         }
     }
+
+    private static void ReportFailure(Action<int, string> updateProgress, string path, Exception exception) =>
+        updateProgress(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} ⚠️ Elemento non pulito: {path}: {exception.Message}\n");
 }

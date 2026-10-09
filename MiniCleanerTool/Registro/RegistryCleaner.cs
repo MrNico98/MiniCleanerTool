@@ -11,6 +11,9 @@ namespace MiniCleanerTool.Registro
     public static class RegistryCleaner
     {
         public delegate void ProgressLogCallback(int progress, string log);
+
+        private static void ReportFailure(ProgressLogCallback callback, string operation, Exception exception) =>
+            callback(0, $"{DateTime.Now:dd/MM/yyyy - HH.mm} Operazione Registro non riuscita ({operation}): {exception.Message}\n");
         [DllImport("advapi32.dll", CharSet = CharSet.Auto)]
         public static extern int RegDeleteKey(IntPtr hKey, string subKey);
 
@@ -56,68 +59,17 @@ namespace MiniCleanerTool.Registro
 
         private static void CleanOrphanedServices(ProgressLogCallback callback)
         {
-            try
-            {
-                using RegistryKey servicesKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services", writable: true);
-                foreach (string subKey in servicesKey.GetSubKeyNames())
-                {
-                    using RegistryKey service = servicesKey.OpenSubKey(subKey);
-                    if (service?.GetValue("ImagePath") == null)
-                    {
-                        servicesKey.DeleteSubKeyTree(subKey, false);
-                        callback(0, $"✔ {LanguageManager.GetTranslation("Regedit", "orphaned_service_removed")}: {subKey}\n");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                callback(0, $"❌ {LanguageManager.GetTranslation("Regedit", "error_cleaning_services")}: {ex.Message}\n");
-            }
+            callback(0, "ℹ️ Rimozione automatica dei servizi di sistema disattivata: l'assenza di ImagePath non prova che una chiave sia orfana.\n");
         }
 
         private static void CleanInvalidCLSID(ProgressLogCallback callback)
         {
-            try
-            {
-                using RegistryKey clsidKey = Registry.ClassesRoot.OpenSubKey(@"CLSID", writable: true);
-                foreach (string subKey in clsidKey.GetSubKeyNames())
-                {
-                    using RegistryKey currentKey = clsidKey.OpenSubKey(subKey);
-                    if (currentKey == null || currentKey.GetValue("") == null)
-                    {
-                        clsidKey.DeleteSubKeyTree(subKey, false);
-                        callback(0, $"✔ {LanguageManager.GetTranslation("Regedit", "orphaned_clsid_removed")}: {subKey}\n");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                callback(0, $"❌ {LanguageManager.GetTranslation("Regedit", "error_cleaning_clsid")}: {ex.Message}\n");
-            }
+            callback(0, "ℹ️ Le chiavi CLSID non vengono eliminate automaticamente: una chiave senza valore predefinito può essere valida.\n");
         }
 
         private static void CleanActiveXControls(ProgressLogCallback callback)
         {
-            try
-            {
-                using RegistryKey activeXKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\SharedDLLs", writable: true);
-                if (activeXKey != null)
-                {
-                    foreach (string valueName in activeXKey.GetValueNames())
-                    {
-                        int usageCount = Convert.ToInt32(activeXKey.GetValue(valueName));
-                        if (usageCount == 0)
-                        {
-                            activeXKey.DeleteValue(valueName, false);
-                            callback(0, $"✔ {LanguageManager.GetTranslation("Regedit", "unused_dll_removed")}: {valueName}\n");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                callback(0, $"❌ {LanguageManager.GetTranslation("Regedit", "error_cleaning_activex")}: {ex.Message}\n");
-            }
+            callback(0, "ℹ️ I riferimenti SharedDLL non vengono rimossi automaticamente in base al solo contatore d'uso.\n");
         }
 
         private static void CleanRegistry(ProgressLogCallback callback)
@@ -177,14 +129,14 @@ namespace MiniCleanerTool.Registro
                                         }
                                         catch (Exception ex)
                                         {
-
+                                            ReportFailure(callback, $"eliminazione sottochiave {subKeyName}", ex);
                                         }
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
-
+                                ReportFailure(callback, $"lettura sottochiave {subKeyName}", ex);
                             }
                         }
 
@@ -197,14 +149,14 @@ namespace MiniCleanerTool.Registro
                             }
                             catch (Exception ex)
                             {
-
+                                ReportFailure(callback, $"eliminazione chiave {registryPath}", ex);
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-
+                    ReportFailure(callback, $"analisi chiave {registryPath}", ex);
                 }
             }
         }
@@ -233,7 +185,6 @@ namespace MiniCleanerTool.Registro
             callback(10, $"{DateTime.Now:dd/MM/yyyy - HH.mm} {LanguageManager.GetTranslation("Regedit", "verificadllmancanti")}\n");
             CheckMissingDllsInKey(Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\SharedDLLs", callback);
             CheckMissingDllsInKey(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\SharedDLLs", callback);
-            CheckMissingDllsInRunEntries(callback);
         }
 
         private static void CheckMissingDllsInKey(RegistryKey rootKey, string subKeyPath, ProgressLogCallback callback)
@@ -258,14 +209,14 @@ namespace MiniCleanerTool.Registro
                         }
                         catch (Exception ex)
                         {
-
+                            ReportFailure(callback, $"rimozione valore {valueName}", ex);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                ReportFailure(callback, $"apertura chiave {subKeyPath}", ex);
             }
         }
 
@@ -294,17 +245,16 @@ namespace MiniCleanerTool.Registro
                             {
                                 var value = key.GetValue(valueName)?.ToString();
                                 if (string.IsNullOrEmpty(value)) continue;
-                                var filePath = value.Split(' ')[0].Trim('"');
-                                if (!File.Exists(filePath))
+                                if (IsStartupExecutableMissing(value))
                                 {
-                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "trovatoesecuzionemancante")}: {filePath}\n");
+                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "trovatoesecuzionemancante")}: {value}\n");
                                     key.DeleteValue(valueName);
-                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "rimossavocesecuzionemancante")}: {filePath}\n");
+                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "rimossavocesecuzionemancante")}: {value}\n");
                                 }
                             }
                             catch (Exception ex)
                             {
-
+                                ReportFailure(callback, $"analisi voce avvio utente {valueName}", ex);
                             }
                         }
                     }
@@ -320,24 +270,23 @@ namespace MiniCleanerTool.Registro
                                 var value = key.GetValue(valueName)?.ToString();
                                 if (string.IsNullOrEmpty(value)) continue;
 
-                                var filePath = value.Split(' ')[0].Trim('"');
-                                if (!File.Exists(filePath))
+                                if (IsStartupExecutableMissing(value))
                                 {
-                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "trovatoesecuzionemancantehkml")}: {filePath}\n");
+                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "trovatoesecuzionemancantehkml")}: {value}\n");
                                     key.DeleteValue(valueName);
-                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "rimossavocesecuzionemancantehkml")}: {filePath}\n");
+                                    callback(20, $"{LanguageManager.GetTranslation("Regedit", "rimossavocesecuzionemancantehkml")}: {value}\n");
                                 }
                             }
                             catch (Exception ex)
                             {
-
+                                ReportFailure(callback, $"analisi voce avvio sistema {valueName}", ex);
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-
+                    ReportFailure(callback, $"apertura voci di avvio utente {runKey}", ex);
                 }
             }
         }
@@ -370,8 +319,7 @@ namespace MiniCleanerTool.Registro
                                 var value = key.GetValue(valueName)?.ToString();
                                 if (string.IsNullOrEmpty(value)) continue;
 
-                                var filePath = value.Split(' ')[0].Trim('"');
-                                if (!File.Exists(filePath))
+                                if (IsStartupExecutableMissing(value))
                                 {
                                     callback(45, $"{LanguageManager.GetTranslation("Regedit", "trovatoesecuzionemancante")}: {valueName}\n");
                                     key.DeleteValue(valueName);
@@ -380,7 +328,7 @@ namespace MiniCleanerTool.Registro
                             }
                             catch (Exception ex)
                             {
-
+                                ReportFailure(callback, $"analisi voce di avvio utente {valueName}", ex);
                             }
                         }
                     }
@@ -396,8 +344,7 @@ namespace MiniCleanerTool.Registro
                                 var value = key.GetValue(valueName)?.ToString();
                                 if (string.IsNullOrEmpty(value)) continue;
 
-                                var filePath = value.Split(' ')[0].Trim('"');
-                                if (!File.Exists(filePath))
+                                if (IsStartupExecutableMissing(value))
                                 {
                                     callback(45, $"{LanguageManager.GetTranslation("Regedit", "trovavocidiavviomancantehkml")}: {valueName}\n");
                                     key.DeleteValue(valueName);
@@ -406,16 +353,36 @@ namespace MiniCleanerTool.Registro
                             }
                             catch (Exception ex)
                             {
-
+                                ReportFailure(callback, $"analisi voce di avvio sistema {valueName}", ex);
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-
+                    ReportFailure(callback, $"apertura voci di avvio sistema {startupKey}", ex);
                 }
             }
+        }
+
+        private static bool IsStartupExecutableMissing(string command)
+        {
+            string expandedCommand = Environment.ExpandEnvironmentVariables(command.Trim());
+            string executablePath;
+            if (expandedCommand.StartsWith('"'))
+            {
+                int closingQuote = expandedCommand.IndexOf('"', 1);
+                if (closingQuote <= 1) return false;
+                executablePath = expandedCommand[1..closingQuote];
+            }
+            else
+            {
+                int executableEnd = expandedCommand.IndexOf(".exe", StringComparison.OrdinalIgnoreCase);
+                if (executableEnd < 0) return false;
+                executablePath = expandedCommand[..(executableEnd + 4)].Trim();
+            }
+
+            return Path.IsPathRooted(executablePath) && !File.Exists(executablePath);
         }
 
         private static void CleanUserAssistHistory(ProgressLogCallback callback)

@@ -3,102 +3,79 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Shell32;
 
 namespace MiniCleanerTool
 {
     public partial class ControlPulizia : UserControl
     {
+        private readonly CancellationTokenSource _analysisCancellation = new();
+
         public ControlPulizia()
         {
             InitializeComponent();
             ThemeManager.ApplyThemeToControl(this, ThemeManager.IsDarkTheme);
+            airCheckBox3.Enabled = false;
+            Disposed += (_, _) => _analysisCancellation.Cancel();
             Verificaprofonda();
         }
 
-        public void IniziaPulizia()
+        public async Task IniziaPulizia()
         {
-            MiniCleanerTool.Cleaner.Cleaner.CleanSystem((progress, log) =>
+            await Task.Run(() => MiniCleanerTool.Cleaner.Cleaner.CleanSystem((progress, log) =>
             {
                 SetProgress(progress);
                 SetLog(log);
-            });
+            }));
 
         }
 
         private async void Verificaprofonda()
         {
-            long recycleSize = GetRecycleBinSize();
-            airCheckBox1.Text = $"{LanguageManager.GetTranslation("Cleaner", "cestino")}: {FormatSize(recycleSize)}";
-            string downloadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            long downloadSize = GetFolderSize(downloadPath);
-            airCheckBox2.Text = $"Download: {FormatSize(downloadSize)}";
-            string logFolderPath = Path.Combine(Environment.GetEnvironmentVariable("SystemRoot"), @"\System32\winevt\Logs");
-            long totalLogSize = 0;
-
-            if (Directory.Exists(logFolderPath))
+            treeView1.Nodes.Clear();
+            treeView1.Nodes.Add("Analisi spazio e ricerca file > 2 GiB in corso...");
+            try
             {
-                DirectoryInfo logDirectory = new DirectoryInfo(logFolderPath);
-                foreach (FileInfo file in logDirectory.GetFiles("*.evtx"))
-                {
-                    totalLogSize += file.Length;
-                }
-            }
+                var analysis = await Task.Run(() => AnalyzeStorage(_analysisCancellation.Token), _analysisCancellation.Token);
+                if (IsDisposed) return;
 
-            string localAppData = Environment.GetEnvironmentVariable("LOCALAPPDATA");
-            if (Directory.Exists(localAppData))
-            {
-                DirectoryInfo localAppDataDir = new DirectoryInfo(localAppData);
-                foreach (DirectoryInfo subDir in localAppDataDir.GetDirectories())
+                airCheckBox1.Text = $"{LanguageManager.GetTranslation("Cleaner", "cestino")}: {FormatSize(analysis.RecycleBinBytes)}";
+                airCheckBox2.Text = $"Download: {FormatSize(analysis.DownloadBytes)}";
+                airCheckBox3.Text = $"Crash Log (sola analisi): {FormatSize(analysis.LogAndCacheBytes)}";
+
+                treeView1.Nodes.Clear();
+                foreach (var kvp in analysis.LargeFilesByDirectory)
                 {
-                    if (subDir.Name.Contains("crash", StringComparison.OrdinalIgnoreCase) || subDir.Name.Contains("Cache", StringComparison.OrdinalIgnoreCase))
+                    string folderName = Path.GetFileName(kvp.Key);
+                    if (string.IsNullOrWhiteSpace(folderName))
+                        folderName = kvp.Key.TrimEnd(Path.DirectorySeparatorChar);
+
+                    var dirNode = new TreeNode(folderName) { ToolTipText = kvp.Key };
+                    foreach (var file in kvp.Value)
                     {
-                        foreach (FileInfo file in subDir.GetFiles("*", SearchOption.AllDirectories))
+                        var fileNode = new TreeNode(Path.GetFileName(file.Path))
                         {
-                            totalLogSize += file.Length;
-                        }
+                            Tag = file.Path,
+                            ToolTipText = $"{file.Path} - {file.SizeBytes / (1024 * 1024)} MB"
+                        };
+                        dirNode.Nodes.Add(fileNode);
                     }
-                }
-            }
 
-            airCheckBox3.Text = $"Crash Log: {FormatSize(totalLogSize)}";
-            treeView1.Nodes.Clear();
-            treeView1.Nodes.Add("Ricerca in corso...");
-
-            var filesByDir = await Task.Run(() =>
-            {
-                string systemDrive = Path.GetPathRoot(Environment.SystemDirectory);
-                return GetLargeFilesByDirectory(systemDrive, 2L * 1024 * 1024 * 1024);
-            });
-
-            treeView1.Nodes.Clear();
-
-            foreach (var kvp in filesByDir)
-            {
-                string folderName = Path.GetFileName(kvp.Key);
-                if (string.IsNullOrWhiteSpace(folderName))
-                    folderName = kvp.Key.TrimEnd('\\');
-
-                var dirNode = new TreeNode(folderName)
-                {
-                    ToolTipText = kvp.Key
-                };
-
-                foreach (var filePath in kvp.Value)
-                {
-                    var fileName = Path.GetFileName(filePath);
-                    var fileNode = new TreeNode(fileName)
-                    {
-                        Tag = filePath,
-                        ToolTipText = $"{filePath} - {new FileInfo(filePath).Length / (1024 * 1024)} MB"
-                    };
-                    dirNode.Nodes.Add(fileNode);
+                    treeView1.Nodes.Add(dirNode);
                 }
 
-                treeView1.Nodes.Add(dirNode);
+                if (treeView1.Nodes.Count == 0)
+                    treeView1.Nodes.Add("Nessun file da 2 GiB o più trovato nelle aree accessibili.");
+                treeView1.ExpandAll();
             }
-
-            treeView1.ExpandAll();
+            catch (OperationCanceledException) { }
+            catch (Exception exception)
+            {
+                if (!IsDisposed)
+                {
+                    treeView1.Nodes.Clear();
+                    treeView1.Nodes.Add($"Analisi non completata: {exception.Message}");
+                }
+            }
         }
 
         private string FormatSize(long bytes)
@@ -113,82 +90,146 @@ namespace MiniCleanerTool
             }
             return $"{len:0.##} {sizes[order]}";
         }
-        private long GetFolderSize(string path)
+        private sealed record StorageAnalysis(
+            long RecycleBinBytes,
+            long DownloadBytes,
+            long LogAndCacheBytes,
+            Dictionary<string, List<LargeFile>> LargeFilesByDirectory);
+
+        private sealed record LargeFile(string Path, long SizeBytes);
+
+        private StorageAnalysis AnalyzeStorage(CancellationToken cancellationToken)
         {
-            try
+            cancellationToken.ThrowIfCancellationRequested();
+            string downloads = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            string eventLogs = Path.Combine(Environment.SystemDirectory, "winevt", "Logs");
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            long logAndCacheBytes = GetDirectorySize(eventLogs, cancellationToken, "*.evtx");
+
+            foreach (string directory in Directory.EnumerateDirectories(localAppData))
             {
-                return Directory.GetFiles(path, "*", SearchOption.AllDirectories)
-                                .Sum(file => new FileInfo(file).Length);
+                cancellationToken.ThrowIfCancellationRequested();
+                string name = Path.GetFileName(directory);
+                if (name.Contains("crash", StringComparison.OrdinalIgnoreCase) || name.Contains("cache", StringComparison.OrdinalIgnoreCase))
+                    logAndCacheBytes += GetDirectorySize(directory, cancellationToken);
             }
-            catch
-            {
-                return 0;
-            }
+
+            string systemDrive = Path.GetPathRoot(Environment.SystemDirectory)
+                ?? throw new DirectoryNotFoundException("Impossibile individuare l'unità di sistema.");
+            return new StorageAnalysis(
+                GetRecycleBinSize(),
+                GetDirectorySize(downloads, cancellationToken),
+                logAndCacheBytes,
+                GetLargeFilesByDirectory(systemDrive, 2L * 1024 * 1024 * 1024, cancellationToken));
         }
-        private Dictionary<string, List<string>> GetLargeFilesByDirectory(string rootPath, long minSize)
+
+        private static long GetDirectorySize(string rootPath, CancellationToken cancellationToken, string pattern = "*")
         {
-            var result = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
-            var dirs = new Stack<string>();
-            dirs.Push(rootPath);
+            if (!Directory.Exists(rootPath)) return 0;
 
-            string[] excludedDirs = new string[]
+            long total = 0;
+            var pending = new Stack<string>();
+            pending.Push(rootPath);
+            while (pending.TryPop(out string? directory))
             {
-        Path.Combine(rootPath, "Windows"),
-        Path.Combine(rootPath, "$Recycle.Bin"),
-        Path.Combine(rootPath, "System Volume Information")
-            };
+                cancellationToken.ThrowIfCancellationRequested();
+                try
+                {
+                    if ((File.GetAttributes(directory) & FileAttributes.ReparsePoint) != 0) continue;
+                    foreach (string file in Directory.EnumerateFiles(directory, pattern, SearchOption.TopDirectoryOnly))
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        try
+                        {
+                            if ((File.GetAttributes(file) & FileAttributes.ReparsePoint) == 0)
+                                total += new FileInfo(file).Length;
+                        }
+                        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Security.SecurityException) { }
+                    }
 
-            while (dirs.Count > 0)
+                    foreach (string child in Directory.EnumerateDirectories(directory))
+                        pending.Push(child);
+                }
+                catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Security.SecurityException) { }
+            }
+
+            return total;
+        }
+
+        private Dictionary<string, List<LargeFile>> GetLargeFilesByDirectory(string rootPath, long minSize, CancellationToken cancellationToken)
+        {
+            var result = new Dictionary<string, List<LargeFile>>(StringComparer.OrdinalIgnoreCase);
+            var pending = new Stack<string>();
+            string root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(rootPath));
+            string[] excludedDirectories = new[] { "Windows", "$Recycle.Bin", "System Volume Information" }
+                .Select(name => Path.TrimEndingDirectorySeparator(Path.GetFullPath(Path.Combine(root, name))))
+                .ToArray();
+            pending.Push(root);
+
+            while (pending.TryPop(out string? currentDirectory))
             {
-                string currentDir = dirs.Pop();
-
-                if (excludedDirs.Any(ex => currentDir.StartsWith(ex, StringComparison.OrdinalIgnoreCase)))
-                    continue;
+                cancellationToken.ThrowIfCancellationRequested();
+                string normalizedDirectory = Path.TrimEndingDirectorySeparator(Path.GetFullPath(currentDirectory));
+                if (excludedDirectories.Any(excluded => normalizedDirectory.Equals(excluded, StringComparison.OrdinalIgnoreCase) ||
+                    normalizedDirectory.StartsWith(excluded + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))) continue;
 
                 try
                 {
-                    foreach (string file in Directory.GetFiles(currentDir))
+                    if ((File.GetAttributes(normalizedDirectory) & FileAttributes.ReparsePoint) != 0) continue;
+                    foreach (string file in Directory.EnumerateFiles(normalizedDirectory))
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
                         try
                         {
-                            var fi = new FileInfo(file);
-                            if (fi.Length >= minSize)
+                            if ((File.GetAttributes(file) & FileAttributes.ReparsePoint) == 0)
                             {
-                                if (!result.ContainsKey(currentDir))
-                                    result[currentDir] = new List<string>();
-
-                                result[currentDir].Add(file);
+                                long length = new FileInfo(file).Length;
+                                if (length >= minSize)
+                                {
+                                    if (!result.TryGetValue(normalizedDirectory, out List<LargeFile>? files))
+                                        result[normalizedDirectory] = files = [];
+                                    files.Add(new LargeFile(file, length));
+                                }
                             }
                         }
-                        catch { }
+                        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Security.SecurityException) { }
                     }
 
-                    foreach (string dir in Directory.GetDirectories(currentDir))
+                    foreach (string directory in Directory.EnumerateDirectories(normalizedDirectory))
                     {
-                        dirs.Push(dir);
+                        cancellationToken.ThrowIfCancellationRequested();
+                        pending.Push(directory);
                     }
                 }
-                catch { }
+                catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Security.SecurityException) { }
             }
 
             return result;
         }
 
-        struct SHQUERYRBINFO
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SHQUERYRBINFO
         {
             public int cbSize;
             public long i64Size;
             public long i64NumItems;
         }
 
-        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-        static extern int SHQueryRecycleBin(string pszRootPath, ref SHQUERYRBINFO pSHQueryRBInfo);
+        [LibraryImport("Shell32.dll", EntryPoint = "SHEmptyRecycleBinW", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial int SHEmptyRecycleBin(IntPtr hwnd, string? rootPath, uint flags);
+
+        [LibraryImport("Shell32.dll", EntryPoint = "SHQueryRecycleBinW", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial int SHQueryRecycleBin(string? rootPath, ref SHQUERYRBINFO info);
 
         private long GetRecycleBinSize()
         {
-            SHQUERYRBINFO rbInfo = new SHQUERYRBINFO();
-            rbInfo.cbSize = Marshal.SizeOf(typeof(SHQUERYRBINFO));
-            SHQueryRecycleBin(null, ref rbInfo);
+            SHQUERYRBINFO rbInfo = new() { cbSize = Marshal.SizeOf<SHQUERYRBINFO>() };
+            int result = SHQueryRecycleBin(null, ref rbInfo);
+            if (result < 0)
+            {
+                Marshal.ThrowExceptionForHR(result);
+            }
+
             return rbInfo.i64Size;
         }
 
@@ -227,7 +268,7 @@ namespace MiniCleanerTool
         {
             if (e.KeyCode == Keys.Delete)
             {
-                TreeNode selectedNode = treeView1.SelectedNode;
+                TreeNode? selectedNode = treeView1.SelectedNode;
 
                 if (selectedNode?.Tag is string filePath && File.Exists(filePath))
                 {
@@ -250,20 +291,37 @@ namespace MiniCleanerTool
             }
         }
 
-        private void materialButtonPulisci_Click(object sender, EventArgs e)
+        private async void materialButtonPulisci_Click(object sender, EventArgs e)
         {
+            if (!airCheckBox1.Checked && !airCheckBox2.Checked)
+            {
+                MessageBox.Show("Seleziona almeno un elemento da pulire.", "Pulizia", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            string selectedItems = string.Join(Environment.NewLine, new[]
+            {
+                airCheckBox1.Checked ? "• Cestino su tutte le unità" : null,
+                airCheckBox2.Checked ? "• Tutti i file e le cartelle in Download" : null,
+                null
+            }.Where(item => item is not null));
+            if (MessageBox.Show(
+                    $"L'operazione può eliminare definitivamente i dati selezionati:{Environment.NewLine}{Environment.NewLine}{selectedItems}{Environment.NewLine}{Environment.NewLine}Vuoi continuare?",
+                    "Conferma pulizia",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            {
+                return;
+            }
+
             if (airCheckBox1.Checked)
             {
                 try
                 {
-                    Shell shell = new Shell();
-                    Folder folder = shell.NameSpace(10);
-                    FolderItems items = folder.Items();
-
-                    foreach (FolderItem item in items)
-                    {
-                        item.InvokeVerb("Empty Recycle Bin");
-                    }
+                    const uint flags = 0x00000001 | 0x00000002 | 0x00000004;
+                    int result = SHEmptyRecycleBin(Handle, null, flags);
+                    if (result < 0) Marshal.ThrowExceptionForHR(result);
                 }
                 catch (Exception ex)
                 {
@@ -275,16 +333,7 @@ namespace MiniCleanerTool
             {
                 try
                 {
-                    string downloadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-                    foreach (string file in Directory.GetFiles(downloadPath))
-                    {
-                        File.Delete(file);
-                    }
-
-                    foreach (string dir in Directory.GetDirectories(downloadPath))
-                    {
-                        Directory.Delete(dir, true);
-                    }
+                    await Task.Run(() => CleanUserDownloads(SetLog));
                 }
                 catch (Exception ex)
                 {
@@ -297,6 +346,52 @@ namespace MiniCleanerTool
             }
 
             MessageBox.Show("Clean complete.");
+        }
+
+        private static void CleanUserDownloads(Action<string> report)
+        {
+            string root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")));
+            if (!Directory.Exists(root)) return;
+            if ((File.GetAttributes(root) & FileAttributes.ReparsePoint) != 0)
+                throw new IOException("La cartella Download è un reparse point: pulizia annullata.");
+
+            var pending = new Stack<(string Path, bool RemoveAfterChildren)>();
+            pending.Push((root, false));
+            while (pending.TryPop(out var item))
+            {
+                if (item.RemoveAfterChildren)
+                {
+                    Directory.Delete(item.Path, recursive: false);
+                    continue;
+                }
+
+                if ((File.GetAttributes(item.Path) & FileAttributes.ReparsePoint) != 0)
+                {
+                    report($"Percorso collegato saltato: {item.Path}\r\n");
+                    continue;
+                }
+
+                if (!item.Path.Equals(root, StringComparison.OrdinalIgnoreCase))
+                    pending.Push((item.Path, true));
+
+                foreach (string entry in Directory.EnumerateFileSystemEntries(item.Path))
+                {
+                    FileAttributes attributes = File.GetAttributes(entry);
+                    if ((attributes & FileAttributes.ReparsePoint) != 0)
+                    {
+                        report($"Percorso collegato saltato: {entry}\r\n");
+                    }
+                    else if ((attributes & FileAttributes.Directory) != 0)
+                    {
+                        pending.Push((entry, false));
+                    }
+                    else
+                    {
+                        File.Delete(entry);
+                    }
+                }
+            }
         }
 
     }

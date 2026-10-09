@@ -1,0 +1,28 @@
+name: .NET 10 build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore
+        run: dotnet restore MiniCleanerTool.sln
+      - name: Build with warnings as errors
+        run: dotnet build MiniCleanerTool.sln --no-restore --configuration Release --warnaserror
+      - name: Publish self-contained Windows x64
+        run: dotnet publish MiniCleanerTool\MiniCleanerTool.csproj --no-restore --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true --warnaserror --output "${{ runner.temp }}\MiniCleanerTool"

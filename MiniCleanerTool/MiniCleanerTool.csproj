@@ -2,43 +2,21 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <FileVersion>0.0.0.3</FileVersion>
     <AssemblyVersion>0.0.0.3</AssemblyVersion>
     <ApplicationIcon>icoAppLogo.ico</ApplicationIcon>
-	<DebugType>none</DebugType>
-	<DebugSymbols>false</DebugSymbols>
-	<Optimize>true</Optimize>
-	<Deterministic>true</Deterministic>
-	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-	<SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
 	<SatelliteResourceLanguages>it;en</SatelliteResourceLanguages>
 	<PublishSingleFile>true</PublishSingleFile>
-	<TrimMode>partial</TrimMode>
-	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
-	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-	<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
-	<EventSourceSupport>false</EventSourceSupport>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\FileTraduttore.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <COMReference Include="Shell32">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>50a7e9b0-70ef-11d1-b75a-00a0c90564fe</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -52,9 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Win32.Registry.AccessControl" Version="9.0.6" />
-    <PackageReference Include="ReaLTaiizor" Version="3.8.1.3" />
+    <PackageReference Include="ReaLTaiizor" Version="3.8.2.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -294,7 +294,6 @@
         private ReaLTaiizor.Controls.DungeonLabel dungeonLabel3;
         private Panel panel4;
         private ReaLTaiizor.Controls.SmallLabel smallLabel1;
-        private ReaLTaiizor.Controls.MaterialButton materialButton1;
         private ReaLTaiizor.Controls.MaterialButton btnAggiorna;
     }
 }
